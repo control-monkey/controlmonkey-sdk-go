@@ -1,0 +1,20 @@
+before:
+  hooks:
+    - go generate ./...
+
+builds:
+  - skip: true
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^chore'
+      - '^ci'
+      - '^doc'
+      - '^test'
+      - Merge pull request
+      - Merge branch
+
+release:
+  draft: true

@@ -1,0 +1,55 @@
+##@ Options
+
+.PHONY: help
+help: ## Display this help
+	$(Q) awk 'BEGIN {FS = ":.*##"; printf "Usage: make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+.PHONY: release
+release: fmt tidy ## Release a new version
+ifneq ($(strip $(GIT_DIRTY)),)
+	$(Q) echo "Git is currently in a dirty state. Please commit your changes or stash them before you release."; exit 1;
+else
+	$(Q) read -p "Release version: $(VERSION) →  " version; sed -i "s/$(VERSION)/$$version/g" controlmonkey/version.go
+	$(Q) git commit -a -m "chore(release): $(RELEASE)"
+	$(Q) git tag -f -m    "chore(release): $(RELEASE)" $(RELEASE)
+	$(Q) git push --follow-tags
+endif
+
+.PHONY: test
+test: fmt ## Run all tests
+	$(Q) mkdir -p $(TEST_DIR)
+	$(Q) $(GO) test \
+		-v $$($(GO) list ./... | grep -v vendor) $(TESTARGS) \
+		-covermode=atomic \
+		-coverprofile=$(GO_COVERAGE) \
+		-race \
+		-timeout=30s \
+		-parallel=4
+
+.PHONY: cover
+cover: test ## Run all tests and open the coverage report
+	$(Q) $(GO) tool cover -html=$(GO_COVERAGE)
+
+.PHONY: tidy
+tidy: ## Add missing and remove unused modules
+	$(Q) $(GO) mod tidy
+
+.PHONY: vendor
+vendor: ## Make vendored copy of all dependencies
+	$(Q) $(GO) mod vendor
+
+.PHONY: fmt
+fmt: ## Format the code
+	$(Q) go fmt $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
+
+.PHONY: imports
+imports: ## Optimize imports
+	$(Q) goimports -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
+
+.PHONY: vet
+vet: ## Analyze the code
+	$(Q) $(GO) vet ./...
+
+.PHONY: clean
+clean: ## Clean all generated artifacts
+	$(Q) rm -rf $(DIST_DIR) $(TEST_DIR)
