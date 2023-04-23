@@ -18,7 +18,7 @@ func StringValue(v *string) string {
 
 // StringSlice converts a slice of string values into a slice of
 // string pointers
-func StringSlice(src []string) []*string {
+func StringSlice(src ...string) []*string {
 	dst := make([]*string, len(src))
 	for i := 0; i < len(src); i++ {
 		dst[i] = &(src[i])
