@@ -25,7 +25,7 @@ func main() {
 	ctx := context.Background()
 
 	// Delete stack.
-	stackId := "stk-123"
+	stackId := "stk-x6ny8qj0n9"
 	_, err := svc.DeleteStack(ctx, stackId)
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to delete stack: %v", err)

@@ -27,7 +27,7 @@ func main() {
 	ctx := context.Background()
 
 	// Update stack.
-	stackId := "stk-123"
+	stackId := "stk-kpajfm381w"
 	out, err := svc.UpdateStack(ctx, stackId, &stack.Stack{
 		Name: controlmonkey.String("stack2"),
 	})

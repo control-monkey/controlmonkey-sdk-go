@@ -61,7 +61,7 @@ type VcsInfo struct {
 }
 
 type RunTrigger struct {
-	Patterns []*string `json:"patterns,omitempty"`
+	Patterns *[]*string `json:"patterns,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -455,7 +455,7 @@ func (o RunTrigger) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *RunTrigger) SetPatterns(v []*string) *RunTrigger {
+func (o *RunTrigger) SetPatterns(v *[]*string) *RunTrigger {
 	if o.Patterns = v; o.Patterns == nil {
 		o.nullFields = append(o.nullFields, "Patterns")
 	}

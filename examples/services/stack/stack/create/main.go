@@ -32,12 +32,12 @@ func main() {
 			WaitForApproval: controlmonkey.Bool(true),
 		},
 		VcsInfo: &stack.VcsInfo{
-			ProviderId: controlmonkey.String("vcsp-123"),
-			RepoName:   controlmonkey.String("repo"),
+			ProviderId: controlmonkey.String("vcsp-jgkig4q04e"),
+			RepoName:   controlmonkey.String("workspace/repo"),
 			Path:       controlmonkey.String("path/to/code"),
 			Branch:     controlmonkey.String("main"),
 		},
-		RunTrigger: &stack.RunTrigger{Patterns: controlmonkey.StringSlice("path/**/*")},
+		RunTrigger: &stack.RunTrigger{Patterns: controlmonkey.StringSlicePointer("path/**/*")},
 		IacConfig: &stack.IacConfig{
 			TerraformVersion: controlmonkey.String("1.4.5"),
 		},
@@ -51,7 +51,7 @@ func main() {
 
 	s := &stack.Stack{
 		IacType:     controlmonkey.String("terraform"),
-		NamespaceId: controlmonkey.String("ns-123"),
+		NamespaceId: controlmonkey.String("ns-x82yjdyahc"),
 		Name:        controlmonkey.String("stack1"),
 		Description: controlmonkey.String("description"),
 		Data:        data,
