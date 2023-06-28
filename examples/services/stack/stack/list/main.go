@@ -27,7 +27,7 @@ func main() {
 	ctx := context.Background()
 
 	// List all stacks.
-	namespaceId := "ns-123"
+	namespaceId := "ns-x82yjdyahc"
 	out, err := svc.ListStacks(ctx, &stack.ListStacksParams{NamespaceId: controlmonkey.String(namespaceId)})
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to read stacks: %v", err)

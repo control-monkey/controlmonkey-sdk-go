@@ -27,7 +27,7 @@ func main() {
 	ctx := context.Background()
 
 	// Read stack.
-	stackId := "stk-123"
+	stackId := "stk-kpajfm381w"
 	out, err := svc.ReadStack(ctx, stackId)
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to read stack: %v", err)

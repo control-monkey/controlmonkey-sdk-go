@@ -26,6 +26,11 @@ func StringSlice(src ...string) []*string {
 	return dst
 }
 
+func StringSlicePointer(src ...string) *[]*string {
+	dst := StringSlice(src...)
+	return &dst
+}
+
 // StringValueSlice converts a slice of string pointers into a slice of
 // string values
 func StringValueSlice(src []*string) []string {
