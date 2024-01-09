@@ -100,6 +100,9 @@ func schemaToMap(schema interface{}, mustInclude, useNull map[string]struct{}) (
 			continue
 		}
 
+		kind := sf.Type.Kind()
+		isEmptySlice := kind == reflect.Slice && !sv.IsNil() && sv.Len() == 0
+
 		jsonTag := sf.Tag.Get("json")
 		if jsonTag == "" {
 			continue
@@ -120,24 +123,24 @@ func schemaToMap(schema interface{}, mustInclude, useNull map[string]struct{}) (
 			m[tag.apiName] = nil
 			continue
 		}
-		if !includeField(sv, sf, mustInclude) {
+		if !includeField(sv, sf, mustInclude) && !isEmptySlice {
 			continue
 		}
 
 		// nil maps are treated as empty maps.
-		if sf.Type.Kind() == reflect.Map && sv.IsNil() {
+		if kind == reflect.Map && sv.IsNil() {
 			m[tag.apiName] = map[string]string{}
 			continue
 		}
 
 		// nil slices are treated as empty slices.
-		if sf.Type.Kind() == reflect.Slice && sv.IsNil() {
+		if kind == reflect.Slice && sv.IsNil() {
 			m[tag.apiName] = []bool{}
 			continue
 		}
 
 		if tag.stringFormat {
-			m[tag.apiName] = formatAsString(sv, sf.Type.Kind())
+			m[tag.apiName] = formatAsString(sv, kind)
 		} else {
 			m[tag.apiName] = sv.Interface()
 		}

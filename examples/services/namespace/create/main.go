@@ -5,6 +5,7 @@ import (
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
+	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/namespace"
 	"log"
 )
@@ -39,15 +40,42 @@ func main() {
 
 	externalCredentials1 := namespace.ExternalCredentials{
 		Type:                  controlmonkey.String("awsAssumeRole"),
-		ExternalCredentialsId: controlmonkey.String("ext-123"),
+		ExternalCredentialsId: controlmonkey.String("ext-stage"),
+		AwsProfileName:        controlmonkey.String("stage"),
 	}
-	externalCredentials := []*namespace.ExternalCredentials{&externalCredentials1}
+	externalCredentials2 := namespace.ExternalCredentials{
+		Type:                  controlmonkey.String("awsAssumeRole"),
+		ExternalCredentialsId: controlmonkey.String("ext-dev"),
+		AwsProfileName:        controlmonkey.String("dev"),
+	}
+	externalCredentials3 := namespace.ExternalCredentials{
+		Type:                  controlmonkey.String("gcpServiceAccount"),
+		ExternalCredentialsId: controlmonkey.String("ext-gcp"),
+	}
+	externalCredentials := []*namespace.ExternalCredentials{&externalCredentials1, &externalCredentials2, &externalCredentials3}
 
 	n := namespace.Namespace{
-		Name:                controlmonkey.String("namespace1"),
+		Name:                controlmonkey.String("go namespace"),
 		Description:         controlmonkey.String("description"),
-		ExternalCredentials: &externalCredentials,
+		ExternalCredentials: externalCredentials,
 		Policy:              policy,
+		IacConfig: &namespace.IacConfig{
+			TerraformVersion:  controlmonkey.String("1.5.0"),
+			TerragruntVersion: controlmonkey.String("0.39.0"),
+		},
+		RunnerConfig: &namespace.RunnerConfig{
+			Mode:          controlmonkey.String("selfHosted"),
+			Groups:        []*string{controlmonkey.String("default")},
+			IsOverridable: controlmonkey.Bool(true),
+		},
+		DeploymentApprovalPolicy: &namespace.DeploymentApprovalPolicy{
+			Rules: []*cross_models.DeploymentApprovalPolicyRule{
+				{
+					Type: controlmonkey.String("requireTwoApprovals"),
+				},
+			},
+			OverrideBehavior: controlmonkey.String("allow"),
+		},
 	}
 	// Create namespace.
 	out, err := svc.CreateNamespace(ctx, &n)
