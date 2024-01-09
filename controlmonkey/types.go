@@ -1,6 +1,12 @@
 package controlmonkey
 
-import "time"
+import (
+	"time"
+)
+
+func Any(v any) *any {
+	return &v
+}
 
 // String returns a pointer to of the string value passed in.
 func String(v string) *string {

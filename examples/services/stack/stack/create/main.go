@@ -5,6 +5,7 @@ import (
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
+	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/stack"
 	"log"
 )
@@ -28,16 +29,22 @@ func main() {
 
 	data := &stack.Data{
 		DeploymentBehavior: &stack.DeploymentBehavior{
-			DeployOnPush:    controlmonkey.Bool(true),
-			WaitForApproval: controlmonkey.Bool(true),
+			DeployOnPush: controlmonkey.Bool(false),
+		},
+		DeploymentApprovalPolicy: &stack.DeploymentApprovalPolicy{
+			Rules: []*cross_models.DeploymentApprovalPolicyRule{
+				{
+					Type: controlmonkey.String("requireApproval"),
+				},
+			},
 		},
 		VcsInfo: &stack.VcsInfo{
-			ProviderId: controlmonkey.String("vcsp-jgkig4q04e"),
-			RepoName:   controlmonkey.String("workspace/repo"),
-			Path:       controlmonkey.String("path/to/code"),
+			ProviderId: controlmonkey.String("vcsp-123"),
+			RepoName:   controlmonkey.String("repo"),
+			Path:       controlmonkey.String("path"),
 			Branch:     controlmonkey.String("main"),
 		},
-		RunTrigger: &stack.RunTrigger{Patterns: controlmonkey.StringSlicePointer("path/**/*")},
+		RunTrigger: &stack.RunTrigger{Patterns: controlmonkey.StringSlice()},
 		IacConfig: &stack.IacConfig{
 			TerraformVersion: controlmonkey.String("1.4.5"),
 		},
@@ -46,12 +53,20 @@ func main() {
 				Ttl: &stack.TtlDefinition{
 					Type:  controlmonkey.String("hours"),
 					Value: controlmonkey.Int(3),
-				}}},
+				},
+			},
+		},
+		RunnerConfig: &stack.RunnerConfig{
+			Mode: controlmonkey.String("managed"),
+		},
+		AutoSync: &stack.AutoSync{
+			DeployWhenDriftDetected: controlmonkey.Bool(true),
+		},
 	}
 
 	s := &stack.Stack{
 		IacType:     controlmonkey.String("terraform"),
-		NamespaceId: controlmonkey.String("ns-x82yjdyahc"),
+		NamespaceId: controlmonkey.String("ns-hhpdqtybv3"),
 		Name:        controlmonkey.String("stack1"),
 		Description: controlmonkey.String("description"),
 		Data:        data,

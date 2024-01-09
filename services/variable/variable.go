@@ -3,34 +3,32 @@ package variable
 import (
 	"context"
 	"encoding/json"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
-	"io"
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
+	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
+	"io"
+	"net/http"
+	"strconv"
 )
 
-// region Variable
+//region Variable
+
+//region Structure
 
 type Variable struct {
-	ID            *string `json:"id,omitempty"`
-	Scope         *string `json:"scope,omitempty"`
-	ScopeId       *string `json:"scopeId,omitempty"`
-	Key           *string `json:"key,omitempty"`
-	Value         *string `json:"value,omitempty"`
-	Type          *string `json:"type,omitempty"`
-	IsSensitive   *bool   `json:"isSensitive,omitempty"`
-	IsOverridable *bool   `json:"isOverridable,omitempty"`
-	IsRequired    *bool   `json:"isRequired,omitempty"`
-	Description   *string `json:"description,omitempty"`
-
-	// Read-only fields.
-	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	ID              *string      `json:"id,omitempty"`    // read-only
+	Scope           *string      `json:"scope,omitempty"` //commons.VariableScopeTypes
+	ScopeId         *string      `json:"scopeId,omitempty"`
+	Key             *string      `json:"key,omitempty"`
+	Value           *string      `json:"value,omitempty"`
+	Type            *string      `json:"type,omitempty"` //commons.VariableTypes
+	IsSensitive     *bool        `json:"isSensitive,omitempty"`
+	IsOverridable   *bool        `json:"isOverridable,omitempty"`
+	IsRequired      *bool        `json:"isRequired,omitempty"`
+	Description     *string      `json:"description,omitempty"`
+	ValueConditions []*Condition `json:"valueConditions,omitempty"`
 
 	// forceSendFields is a read of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -48,6 +46,19 @@ type Variable struct {
 	// This may be used to include null fields in Patch requests.
 	nullFields []string
 }
+
+type Condition struct {
+	Operator *string   `json:"operator,omitempty"` //commons.VariableConditionOperatorTypes
+	Value    *any      `json:"value,omitempty"`
+	Values   []*string // logical field to store Value if Value is a Slice
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+//endregion
+
+//region Requests & Responses
 
 type ListVariablesInput struct {
 	StackId     *string `json:"stackId,omitempty"`
@@ -83,40 +94,9 @@ type DeleteVariableInput struct {
 
 type DeleteVariableOutput struct{}
 
-func variableFromJSON(in []byte) (*Variable, error) {
-	b := new(Variable)
-	if err := json.Unmarshal(in, b); err != nil {
-		return nil, err
-	}
-	return b, nil
-}
+//endregion
 
-func variablesFromJSON(in []byte) ([]*Variable, error) {
-	var rw client.Response
-	if err := json.Unmarshal(in, &rw); err != nil {
-		return nil, err
-	}
-	out := make([]*Variable, len(rw.Response.Items))
-	if len(out) == 0 {
-		return out, nil
-	}
-	for i, rb := range rw.Response.Items {
-		b, err := variableFromJSON(rb)
-		if err != nil {
-			return nil, err
-		}
-		out[i] = b
-	}
-	return out, nil
-}
-
-func variablesFromHttpResponse(resp *http.Response) ([]*Variable, error) {
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	return variablesFromJSON(body)
-}
+//region Methods
 
 func (s *ServiceOp) ListVariables(ctx context.Context, input *ListVariablesInput) (*ListVariablesOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/variable")
@@ -252,6 +232,49 @@ func (s *ServiceOp) DeleteVariable(ctx context.Context, input *DeleteVariableInp
 	return output, nil
 }
 
+//endregion
+
+//region Private Methods
+
+func variableFromJSON(in []byte) (*Variable, error) {
+	b := new(Variable)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func variablesFromJSON(in []byte) ([]*Variable, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*Variable, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := variableFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func variablesFromHttpResponse(resp *http.Response) ([]*Variable, error) {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return variablesFromJSON(body)
+}
+
+//endregion
+
+//region Setters
+
 func (o Variable) MarshalJSON() ([]byte, error) {
 	type noMethod Variable
 	raw := noMethod(o)
@@ -259,22 +282,30 @@ func (o Variable) MarshalJSON() ([]byte, error) {
 }
 
 func (o *Variable) SetScope(v *string) *Variable {
-	o.Scope = v
+	if o.Scope = v; o.Scope == nil {
+		o.nullFields = append(o.nullFields, "Scope")
+	}
 	return o
 }
 
 func (o *Variable) SetScopeId(v *string) *Variable {
-	o.ScopeId = v
+	if o.ScopeId = v; o.ScopeId == nil {
+		o.nullFields = append(o.nullFields, "ScopeId")
+	}
 	return o
 }
 
 func (o *Variable) SetKey(v *string) *Variable {
-	o.Key = v
+	if o.Key = v; o.Key == nil {
+		o.nullFields = append(o.nullFields, "Key")
+	}
 	return o
 }
 
 func (o *Variable) SetType(v *string) *Variable {
-	o.Type = v
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
 	return o
 }
 
@@ -286,12 +317,18 @@ func (o *Variable) SetValue(v *string) *Variable {
 }
 
 func (o *Variable) SetIsSensitive(v *bool) *Variable {
-	o.IsSensitive = v
+	if o.IsSensitive = v; o.IsSensitive == nil {
+		o.nullFields = append(o.nullFields, "IsSensitive")
+	}
+
 	return o
 }
 
 func (o *Variable) SetIsOverridable(v *bool) *Variable {
-	o.IsOverridable = v
+	if o.IsOverridable = v; o.IsOverridable == nil {
+		o.nullFields = append(o.nullFields, "IsOverridable")
+	}
+
 	return o
 }
 
@@ -309,4 +346,63 @@ func (o *Variable) SetDescription(v *string) *Variable {
 	return o
 }
 
-// endregion
+func (o *Variable) SetValueConditions(v []*Condition) *Variable {
+	if o.ValueConditions = v; o.ValueConditions == nil {
+		o.nullFields = append(o.nullFields, "ValueConditions")
+	}
+	return o
+}
+
+// region Value Conditions
+
+func (o *Condition) UnmarshalJSON(data []byte) error {
+	type C Condition
+	if err := json.Unmarshal(data, (*C)(o)); err != nil {
+		return err
+	}
+
+	m := make(map[string]interface{})
+
+	if err := json.Unmarshal(data, &m); err != nil {
+		return err
+	}
+
+	if *o.Operator == commons.In {
+		values := make([]*string, 0)
+		for _, element := range m["value"].([]interface{}) {
+			values = append(values, controlmonkey.String(element.(string)))
+		}
+		o.Values = values
+	} else {
+		var val = m["value"]
+		o.Value = &val
+	}
+
+	return nil
+}
+
+func (o Condition) MarshalJSON() ([]byte, error) {
+	type noMethod Condition
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Condition) SetOperator(v *string) *Condition {
+	if o.Operator = v; o.Operator == nil {
+		o.nullFields = append(o.nullFields, "Operator")
+	}
+	return o
+}
+
+func (o *Condition) SetValue(v *any) *Condition {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+//endregion
+
+//endregion
+
+//endregion

@@ -35,6 +35,13 @@ func main() {
 		Value:         controlmonkey.String("value"),
 		IsSensitive:   controlmonkey.Bool(false),
 		IsOverridable: controlmonkey.Bool(false),
+		Description:   controlmonkey.String("variable description"),
+		ValueConditions: []*variable.Condition{
+			{
+				Operator: controlmonkey.String("in"),
+				Value:    controlmonkey.Any(controlmonkey.StringSlice("value", "value2")),
+			},
+		},
 	})
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to create variable: %v", err)

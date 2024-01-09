@@ -7,6 +7,7 @@ import (
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
+	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
 	"io"
 	"net/http"
 )
@@ -16,19 +17,23 @@ import (
 // region Structure
 
 type Namespace struct {
-	ID                  *string                 `json:"id,omitempty"`
-	Name                *string                 `json:"name,omitempty"`
-	Description         *string                 `json:"description,omitempty"`
-	ExternalCredentials *[]*ExternalCredentials `json:"externalCredentials,omitempty"`
-	Policy              *Policy                 `json:"policy,omitempty"`
+	ID                       *string                   `json:"id,omitempty"` // read-only
+	Name                     *string                   `json:"name,omitempty"`
+	Description              *string                   `json:"description,omitempty"`
+	ExternalCredentials      []*ExternalCredentials    `json:"externalCredentials,omitempty"`
+	Policy                   *Policy                   `json:"policy,omitempty"`
+	IacConfig                *IacConfig                `json:"iacConfig,omitempty"`
+	RunnerConfig             *RunnerConfig             `json:"runnerConfig,omitempty"`
+	DeploymentApprovalPolicy *DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type ExternalCredentials struct {
-	Type                  *string `json:"type,omitempty"`
+	Type                  *string `json:"type,omitempty"` //commons.ExternalCredentialTypes
 	ExternalCredentialsId *string `json:"externalCredentialsId,omitempty"`
+	AwsProfileName        *string `json:"awsProfileName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -50,8 +55,33 @@ type TtlConfig struct {
 }
 
 type TtlDefinition struct {
-	Type  *string `json:"type,omitempty"`
+	Type  *string `json:"type,omitempty"` //commons.TtlTypes
 	Value *int    `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type IacConfig struct {
+	TerraformVersion  *string `json:"terraformVersion,omitempty"`
+	TerragruntVersion *string `json:"terragruntVersion,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RunnerConfig struct {
+	Mode          *string   `json:"mode,omitempty"` //commons.RunnerConfigModeTypes
+	Groups        []*string `json:"groups,omitempty"`
+	IsOverridable *bool     `json:"isOverridable,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type DeploymentApprovalPolicy struct {
+	Rules            []*cross_models.DeploymentApprovalPolicyRule `json:"rules,omitempty"`
+	OverrideBehavior *string                                      `json:"overrideBehavior,omitempty"` //commons.OverrideBehaviorTypes
 
 	forceSendFields []string
 	nullFields      []string
@@ -264,7 +294,7 @@ func (o *Namespace) SetDescription(v *string) *Namespace {
 	return o
 }
 
-func (o *Namespace) SetExternalCredentials(v *[]*ExternalCredentials) *Namespace {
+func (o *Namespace) SetExternalCredentials(v []*ExternalCredentials) *Namespace {
 	if o.ExternalCredentials = v; o.ExternalCredentials == nil {
 		o.nullFields = append(o.nullFields, "ExternalCredentials")
 	}
@@ -274,6 +304,27 @@ func (o *Namespace) SetExternalCredentials(v *[]*ExternalCredentials) *Namespace
 func (o *Namespace) SetPolicy(v *Policy) *Namespace {
 	if o.Policy = v; o.Policy == nil {
 		o.nullFields = append(o.nullFields, "Policy")
+	}
+	return o
+}
+
+func (o *Namespace) SetIacConfig(v *IacConfig) *Namespace {
+	if o.IacConfig = v; o.IacConfig == nil {
+		o.nullFields = append(o.nullFields, "IacConfig")
+	}
+	return o
+}
+
+func (o *Namespace) SetRunnerConfig(v *RunnerConfig) *Namespace {
+	if o.RunnerConfig = v; o.RunnerConfig == nil {
+		o.nullFields = append(o.nullFields, "RunnerConfig")
+	}
+	return o
+}
+
+func (o *Namespace) SetDeploymentApprovalPolicy(v *DeploymentApprovalPolicy) *Namespace {
+	if o.DeploymentApprovalPolicy = v; o.DeploymentApprovalPolicy == nil {
+		o.nullFields = append(o.nullFields, "DeploymentApprovalPolicy")
 	}
 	return o
 }
@@ -298,6 +349,13 @@ func (o *ExternalCredentials) SetType(v *string) *ExternalCredentials {
 func (o *ExternalCredentials) SetExternalCredentialsId(v *string) *ExternalCredentials {
 	if o.ExternalCredentialsId = v; o.ExternalCredentialsId == nil {
 		o.nullFields = append(o.nullFields, "ExternalCredentialsId")
+	}
+	return o
+}
+
+func (o *ExternalCredentials) SetAwsProfileName(v *string) *ExternalCredentials {
+	if o.AwsProfileName = v; o.AwsProfileName == nil {
+		o.nullFields = append(o.nullFields, "AwsProfileName")
 	}
 	return o
 }
@@ -343,6 +401,85 @@ func (o *TtlDefinition) SetType(v *string) *TtlDefinition {
 func (o *TtlDefinition) SetValue(v *int) *TtlDefinition {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+//endregion
+
+//region Iac Config
+
+func (o IacConfig) MarshalJSON() ([]byte, error) {
+	type noMethod IacConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *IacConfig) SetTerraformVersion(v *string) *IacConfig {
+	if o.TerraformVersion = v; o.TerraformVersion == nil {
+		o.nullFields = append(o.nullFields, "TerraformVersion")
+	}
+	return o
+}
+
+func (o *IacConfig) SetTerragruntVersion(v *string) *IacConfig {
+	if o.TerragruntVersion = v; o.TerragruntVersion == nil {
+		o.nullFields = append(o.nullFields, "TerragruntVersion")
+	}
+	return o
+}
+
+//endregion
+
+//region Runner Config
+
+func (o RunnerConfig) MarshalJSON() ([]byte, error) {
+	type noMethod RunnerConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RunnerConfig) SetMode(v *string) *RunnerConfig {
+	if o.Mode = v; o.Mode == nil {
+		o.nullFields = append(o.nullFields, "Mode")
+	}
+	return o
+}
+
+func (o *RunnerConfig) SetGroups(v []*string) *RunnerConfig {
+	if o.Groups = v; o.Groups == nil {
+		o.nullFields = append(o.nullFields, "Groups")
+	}
+	return o
+}
+
+func (o *RunnerConfig) SetIsOverridable(v *bool) *RunnerConfig {
+	if o.IsOverridable = v; o.IsOverridable == nil {
+		o.nullFields = append(o.nullFields, "IsOverridable")
+	}
+	return o
+}
+
+//endregion
+
+//region Deployment Approval Policy
+
+func (o DeploymentApprovalPolicy) MarshalJSON() ([]byte, error) {
+	type noMethod DeploymentApprovalPolicy
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *DeploymentApprovalPolicy) SetRules(v []*cross_models.DeploymentApprovalPolicyRule) *DeploymentApprovalPolicy {
+	if o.Rules = v; o.Rules == nil {
+		o.nullFields = append(o.nullFields, "Rules")
+	}
+	return o
+}
+
+func (o *DeploymentApprovalPolicy) SetOverrideBehavior(v *string) *DeploymentApprovalPolicy {
+	if o.OverrideBehavior = v; o.OverrideBehavior == nil {
+		o.nullFields = append(o.nullFields, "OverrideBehavior")
 	}
 	return o
 }
