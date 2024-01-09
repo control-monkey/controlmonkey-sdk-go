@@ -39,7 +39,7 @@ func main() {
 		ValueConditions: []*variable.Condition{
 			{
 				Operator: controlmonkey.String("in"),
-				Values:   controlmonkey.StringSlice("value", "value2"),
+				Value:    controlmonkey.Any(controlmonkey.StringSlice("value", "value2")),
 			},
 		},
 	})

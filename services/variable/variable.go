@@ -50,7 +50,7 @@ type Variable struct {
 type Condition struct {
 	Operator *string   `json:"operator,omitempty"` //commons.VariableConditionOperatorTypes
 	Value    *any      `json:"value,omitempty"`
-	Values   []*string `json:"value,omitempty"`
+	Values   []*string // logical field to store Value if Value is a Slice
 
 	forceSendFields []string
 	nullFields      []string
@@ -397,13 +397,6 @@ func (o *Condition) SetOperator(v *string) *Condition {
 func (o *Condition) SetValue(v *any) *Condition {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
-	}
-	return o
-}
-
-func (o *Condition) SetValues(v []*string) *Condition {
-	if o.Values = v; o.Values == nil {
-		o.nullFields = append(o.nullFields, "Values")
 	}
 	return o
 }
