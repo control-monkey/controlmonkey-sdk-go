@@ -26,6 +26,10 @@ test: fmt ## Run all tests
 		-timeout=30s \
 		-parallel=4
 
+.PHONY: sanity_test
+sanity_test: fmt ## Run all tests
+	$(Q) $(GO) test ./...
+
 .PHONY: cover
 cover: test ## Run all tests and open the coverage report
 	$(Q) $(GO) tool cover -html=$(GO_COVERAGE)
@@ -53,3 +57,7 @@ vet: ## Analyze the code
 .PHONY: clean
 clean: ## Clean all generated artifacts
 	$(Q) rm -rf $(DIST_DIR) $(TEST_DIR)
+
+.PHONY: pre_build
+pre_build: tidy imports fmt sanity_test vet ## Pre Build sanity run to avoid in advance a failed build
+	test -z "$(goimports -l -e $(find . -name '*.go' | grep -v vendor))"

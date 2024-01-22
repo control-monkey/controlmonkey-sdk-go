@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/namespace"
-	"log"
 )
 
 func main() {

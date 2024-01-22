@@ -5,7 +5,7 @@ var (
 	VariableTypes                     = []string{TfTVar, EnvVar}
 	DeploymentApprovalPolicyRuleTypes = []string{RequireApproval, AutoApprove, RequireTwoApprovals}
 	ExternalCredentialTypes           = []string{AwsAssumeRole, GcpServiceAccount, AzureServicePrincipal}
-	IacTypes                          = []string{Terraform, Terragrunt}
+	IacTypes                          = []string{Terraform, Terragrunt, Opentofu}
 	OverrideBehaviorTypes             = []string{Allow, Deny, Extended}
 	RunnerConfigModeTypes             = []string{Managed, SelfHosted}
 	TtlTypes                          = []string{Hours, Days}

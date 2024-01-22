@@ -20,6 +20,7 @@ const (
 
 	Terraform  = "terraform"
 	Terragrunt = "terragrunt"
+	Opentofu   = "opentofu"
 
 	Allow    = "allow"
 	Deny     = "deny"
