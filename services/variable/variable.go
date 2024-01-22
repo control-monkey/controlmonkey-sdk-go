@@ -3,14 +3,15 @@ package variable
 import (
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
+	"strconv"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
-	"io"
-	"net/http"
-	"strconv"
 )
 
 //region Variable

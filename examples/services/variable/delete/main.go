@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/variable"
-	"log"
 )
 
 func main() {

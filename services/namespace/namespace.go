@@ -3,13 +3,14 @@ package namespace
 import (
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
-	"io"
-	"net/http"
 )
 
 //region Namespace
@@ -65,6 +66,7 @@ type TtlDefinition struct {
 type IacConfig struct {
 	TerraformVersion  *string `json:"terraformVersion,omitempty"`
 	TerragruntVersion *string `json:"terragruntVersion,omitempty"`
+	OpentofuVersion   *string `json:"opentofuVersion,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -425,6 +427,13 @@ func (o *IacConfig) SetTerraformVersion(v *string) *IacConfig {
 func (o *IacConfig) SetTerragruntVersion(v *string) *IacConfig {
 	if o.TerragruntVersion = v; o.TerragruntVersion == nil {
 		o.nullFields = append(o.nullFields, "TerragruntVersion")
+	}
+	return o
+}
+
+func (o *IacConfig) SetOpentofuVersion(v *string) *IacConfig {
+	if o.OpentofuVersion = v; o.OpentofuVersion == nil {
+		o.nullFields = append(o.nullFields, "OpentofuVersion")
 	}
 	return o
 }
