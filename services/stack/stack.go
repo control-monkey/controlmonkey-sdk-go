@@ -169,26 +169,6 @@ type UpdateStackOutput struct {
 
 //region Methods
 
-func (s *ServiceOp) ListStacks(ctx context.Context, input *ListStacksParams) (*ListStacksOutput, error) {
-	r := client.NewRequest(http.MethodGet, "/stack")
-	if input.NamespaceId != nil {
-		r.Params.Set("namespaceId", controlmonkey.StringValue(input.NamespaceId))
-	}
-
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	stacks, err := stacksFromHttpResponse(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ListStacksOutput{Stacks: stacks}, nil
-}
-
 func (s *ServiceOp) CreateStack(ctx context.Context, input *CreateStackInput) (*CreateStackOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/stack")
 	r.Obj = input

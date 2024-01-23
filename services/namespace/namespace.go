@@ -113,23 +113,6 @@ type UpdateNamespaceOutput struct {
 
 //region Methods
 
-func (s *ServiceOp) ListNamespaces(ctx context.Context) (*ListNamespacesOutput, error) {
-	r := client.NewRequest(http.MethodGet, "/namespace")
-
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	namespaces, err := namespacesFromHttpResponse(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ListNamespacesOutput{Namespaces: namespaces}, nil
-}
-
 func (s *ServiceOp) CreateNamespace(ctx context.Context, input *Namespace) (*CreateNamespaceOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/namespace")
 	r.Obj = input
