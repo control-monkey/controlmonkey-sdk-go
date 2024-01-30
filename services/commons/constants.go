@@ -40,4 +40,11 @@ const (
 	In         = "in"
 	StartsWith = "startsWith"
 	Contains   = "contains"
+
+	StackTargetType     = "stack"
+	NamespaceTargetType = "namespace"
+
+	Warning       = "warning"
+	SoftMandatory = "softMandatory"
+	HardMandatory = "hardMandatory"
 )

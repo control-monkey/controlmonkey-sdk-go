@@ -10,4 +10,6 @@ var (
 	RunnerConfigModeTypes             = []string{Managed, SelfHosted}
 	TtlTypes                          = []string{Hours, Days}
 	VariableConditionOperatorTypes    = []string{Ne, Gt, Gte, Lt, Lte, In, StartsWith, Contains}
+	PolicyMappingTargetTypes          = []string{StackTargetType, NamespaceTargetType}
+	EnforcementLevelTypes             = []string{Warning, SoftMandatory, HardMandatory}
 )
