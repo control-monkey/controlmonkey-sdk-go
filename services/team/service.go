@@ -17,6 +17,10 @@ type Service interface {
 	ReadTeam(context.Context, string) (*Team, error)
 	UpdateTeam(context.Context, string, *Team) (*Team, error)
 	DeleteTeam(context.Context, string) (*commons.EmptyResponse, error)
+
+	ListTeamUsers(context.Context, string) ([]*TeamUser, error)
+	CreateTeamUser(context.Context, *TeamUser) (*commons.EmptyResponse, error)
+	DeleteTeamUser(context.Context, *TeamUser) (*commons.EmptyResponse, error)
 }
 
 type ServiceOp struct {
