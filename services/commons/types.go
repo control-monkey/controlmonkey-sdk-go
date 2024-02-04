@@ -12,4 +12,5 @@ var (
 	VariableConditionOperatorTypes    = []string{Ne, Gt, Gte, Lt, Lte, In, StartsWith, Contains}
 	PolicyMappingTargetTypes          = []string{StackTargetType, NamespaceTargetType}
 	EnforcementLevelTypes             = []string{Warning, SoftMandatory, HardMandatory}
+	NamespaceRoleTypes                = []string{NamespaceRoleViewer, NamespaceRoleDeployer, NamespaceRoleAdmin}
 )

@@ -47,4 +47,8 @@ const (
 	Warning       = "warning"
 	SoftMandatory = "softMandatory"
 	HardMandatory = "hardMandatory"
+
+	NamespaceRoleViewer   = "viewer"
+	NamespaceRoleDeployer = "deployer"
+	NamespaceRoleAdmin    = "admin"
 )
