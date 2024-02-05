@@ -17,12 +17,13 @@ import (
 // region Structure
 
 type Template struct {
-	ID          *string  `json:"id,omitempty"` // read-only
-	Name        *string  `json:"name,omitempty"`
-	IacType     *string  `json:"iacType,omitempty"` //commons.IacTypes
-	Description *string  `json:"description,omitempty"`
-	VcsInfo     *VcsInfo `json:"vcsInfo,omitempty"`
-	Policy      *Policy  `json:"policy,omitempty"`
+	ID                        *string  `json:"id,omitempty"` // read-only
+	Name                      *string  `json:"name,omitempty"`
+	IacType                   *string  `json:"iacType,omitempty"` //commons.IacTypes
+	Description               *string  `json:"description,omitempty"`
+	VcsInfo                   *VcsInfo `json:"vcsInfo,omitempty"`
+	Policy                    *Policy  `json:"policy,omitempty"`
+	SkipStateRefreshOnDestroy *bool    `json:"skipStateRefreshOnDestroy,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -251,6 +252,13 @@ func (o *Template) SetVcsInfo(v *VcsInfo) *Template {
 func (o *Template) SetPolicy(v *Policy) *Template {
 	if o.Policy = v; o.Policy == nil {
 		o.nullFields = append(o.nullFields, "Policy")
+	}
+	return o
+}
+
+func (o *Template) SetSkipStateRefreshOnDestroy(v *bool) *Template {
+	if o.SkipStateRefreshOnDestroy = v; o.SkipStateRefreshOnDestroy == nil {
+		o.nullFields = append(o.nullFields, "SkipStateRefreshOnDestroy")
 	}
 	return o
 }
