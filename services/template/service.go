@@ -17,6 +17,10 @@ type Service interface {
 	ReadTemplate(context.Context, string) (*Template, error)
 	UpdateTemplate(context.Context, string, *Template) (*Template, error)
 	DeleteTemplate(context.Context, string) (*commons.EmptyResponse, error)
+
+	ListTemplateNamespaceMappings(context.Context, string) ([]*TemplateNamespaceMapping, error)
+	CreateTemplateNamespaceMapping(context.Context, *TemplateNamespaceMapping) (*TemplateNamespaceMapping, error)
+	DeleteTemplateNamespaceMapping(context.Context, *TemplateNamespaceMapping) (*commons.EmptyResponse, error)
 }
 
 type ServiceOp struct {

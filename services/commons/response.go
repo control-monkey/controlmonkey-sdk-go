@@ -2,7 +2,8 @@ package commons
 
 type EmptyResponse struct{}
 
-var (
+// Error codes
+const (
 	ErrorCodeNotFound     = "not_found"
 	ErrorCodeAlreadyExist = "already_exist"
 )
