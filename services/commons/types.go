@@ -14,4 +14,6 @@ var (
 	EnforcementLevelTypes             = []string{Warning, SoftMandatory, HardMandatory}
 	GroupEnforcementLevelTypes        = []string{Warning, SoftMandatory, HardMandatory, BySeverity}
 	NamespaceRoleTypes                = []string{NamespaceRoleViewer, NamespaceRoleDeployer, NamespaceRoleAdmin}
+	EventSubscriptionScopeTypes       = []string{OrganizationScope, NamespaceScope}
+	EventSubscriptionProtocolTypes    = []string{SlackProtocol, TeamsProtocol}
 )

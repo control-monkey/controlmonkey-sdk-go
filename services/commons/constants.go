@@ -52,4 +52,7 @@ const (
 	NamespaceRoleViewer   = "viewer"
 	NamespaceRoleDeployer = "deployer"
 	NamespaceRoleAdmin    = "admin"
+
+	SlackProtocol = "slack"
+	TeamsProtocol = "teams"
 )
