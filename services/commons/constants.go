@@ -55,4 +55,6 @@ const (
 
 	SlackProtocol = "slack"
 	TeamsProtocol = "teams"
+
+	WeeklyReportType = "weeklyReport"
 )

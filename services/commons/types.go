@@ -16,4 +16,5 @@ var (
 	NamespaceRoleTypes                = []string{NamespaceRoleViewer, NamespaceRoleDeployer, NamespaceRoleAdmin}
 	EventSubscriptionScopeTypes       = []string{OrganizationScope, NamespaceScope}
 	EventSubscriptionProtocolTypes    = []string{SlackProtocol, TeamsProtocol}
+	ReportTypes                       = []string{WeeklyReportType}
 )
