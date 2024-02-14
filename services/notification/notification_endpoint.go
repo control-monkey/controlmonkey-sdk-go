@@ -3,12 +3,13 @@ package notification
 import (
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
-	"io"
-	"net/http"
 )
 
 //region Endpoint

@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
 	"log"
+
+	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/services/namespace_permissions"
 

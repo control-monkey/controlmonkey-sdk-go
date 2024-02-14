@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/namespace_permissions"
-	"log"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 )

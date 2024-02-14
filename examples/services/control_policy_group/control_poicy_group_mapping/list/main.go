@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/control_policy_group"
 	"log"
+
+	"github.com/control-monkey/controlmonkey-sdk-go/services/control_policy_group"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
