@@ -13,6 +13,11 @@ import (
 // of the ControlMonkey API. See this package's package overview docs for details on
 // the service.
 type Service interface {
+	CreateControlPolicy(context.Context, *ControlPolicy) (*ControlPolicy, error)
+	ReadControlPolicy(context.Context, string) (*ControlPolicy, error)
+	UpdateControlPolicy(context.Context, string, *ControlPolicy) (*ControlPolicy, error)
+	DeleteControlPolicy(context.Context, string) (*commons.EmptyResponse, error)
+
 	CreateControlPolicyMapping(context.Context, *ControlPolicyMapping) (*ControlPolicyMapping, error)
 	ListControlPolicyMappings(context.Context, string) ([]*ControlPolicyMapping, error)
 	UpdateControlPolicyMapping(context.Context, *ControlPolicyMapping) (*ControlPolicyMapping, error)

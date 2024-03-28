@@ -6,20 +6,23 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
 )
 
-//region ControlPolicyMapping
+//region ControlPolicy
 
 // region Structure
 
-type ControlPolicyMapping struct {
-	ControlPolicyId  *string `json:"controlPolicyId,omitempty"`
-	TargetId         *string `json:"targetId,omitempty"`
-	TargetType       *string `json:"targetType,omitempty"`       //commons.PolicyMappingTargetTypes
-	EnforcementLevel *string `json:"enforcementLevel,omitempty"` //commons.EnforcementLevelTypes
+type ControlPolicy struct {
+	ID          *string                 `json:"id,omitempty"` // read-only
+	Name        *string                 `json:"name,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Type        *string                 `json:"type,omitempty"`
+	Parameters  *map[string]interface{} `json:"parameters,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -29,8 +32,8 @@ type ControlPolicyMapping struct {
 
 //region Methods
 
-func (s *ServiceOp) CreateControlPolicyMapping(ctx context.Context, input *ControlPolicyMapping) (*ControlPolicyMapping, error) {
-	r := client.NewRequest(http.MethodPost, "/controlPolicy/controlPolicyMapping")
+func (s *ServiceOp) CreateControlPolicy(ctx context.Context, input *ControlPolicy) (*ControlPolicy, error) {
+	r := client.NewRequest(http.MethodPost, "/controlPolicy")
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -39,39 +42,52 @@ func (s *ServiceOp) CreateControlPolicyMapping(ctx context.Context, input *Contr
 	}
 	defer resp.Body.Close()
 
-	controlPolicyMapping, err := controlPolicyMappingsFromHttpResponse(resp)
+	controlPolicy, err := controlPoliciesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(ControlPolicyMapping)
-	if len(controlPolicyMapping) > 0 {
-		output = controlPolicyMapping[0]
+	output := new(ControlPolicy)
+	if len(controlPolicy) > 0 {
+		output = controlPolicy[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) ListControlPolicyMappings(ctx context.Context, controlPolicyId string) ([]*ControlPolicyMapping, error) {
-	r := client.NewRequest(http.MethodGet, "/controlPolicy/controlPolicyMapping")
-	r.Params.Set("controlPolicyId", controlPolicyId)
+func (s *ServiceOp) ReadControlPolicy(ctx context.Context, controlPolicyId string) (*ControlPolicy, error) {
+	path, err := uritemplates.Expand("/controlPolicy/{controlPolicyId}", uritemplates.Values{"controlPolicyId": controlPolicyId})
+	if err != nil {
+		return nil, err
+	}
 
+	r := client.NewRequest(http.MethodGet, path)
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	output, err := controlPolicyMappingsFromHttpResponse(resp)
+	controlPolicy, err := controlPoliciesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
+	}
+
+	output := new(ControlPolicy)
+	if len(controlPolicy) > 0 {
+		output = controlPolicy[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) UpdateControlPolicyMapping(ctx context.Context, input *ControlPolicyMapping) (*ControlPolicyMapping, error) {
-	r := client.NewRequest(http.MethodPut, "/controlPolicy/controlPolicyMapping")
+func (s *ServiceOp) UpdateControlPolicy(ctx context.Context, id string, input *ControlPolicy) (*ControlPolicy, error) {
+	path, err := uritemplates.Expand("/controlPolicy/{controlPolicyId}", uritemplates.Values{"controlPolicyId": id})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -80,23 +96,27 @@ func (s *ServiceOp) UpdateControlPolicyMapping(ctx context.Context, input *Contr
 	}
 	defer resp.Body.Close()
 
-	controlPolicyMapping, err := controlPolicyMappingsFromHttpResponse(resp)
+	controlPolicy, err := controlPoliciesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(ControlPolicyMapping)
+	output := new(ControlPolicy)
 
-	if len(controlPolicyMapping) > 0 {
-		output = controlPolicyMapping[0]
+	if len(controlPolicy) > 0 {
+		output = controlPolicy[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) DeleteControlPolicyMapping(ctx context.Context, input *ControlPolicyMapping) (*commons.EmptyResponse, error) {
-	r := client.NewRequest(http.MethodDelete, "/controlPolicy/controlPolicyMapping")
-	r.Obj = input
+func (s *ServiceOp) DeleteControlPolicy(ctx context.Context, id string) (*commons.EmptyResponse, error) {
+	path, err := uritemplates.Expand("/controlPolicy/{controlPolicyId}", uritemplates.Values{"controlPolicyId": id})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodDelete, path)
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -112,25 +132,25 @@ func (s *ServiceOp) DeleteControlPolicyMapping(ctx context.Context, input *Contr
 
 //region Private Methods
 
-func controlPolicyMappingFromJSON(in []byte) (*ControlPolicyMapping, error) {
-	b := new(ControlPolicyMapping)
+func controlPolicyFromJSON(in []byte) (*ControlPolicy, error) {
+	b := new(ControlPolicy)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
 
-func controlPolicyMappingsFromJSON(in []byte) ([]*ControlPolicyMapping, error) {
+func controlPolicysFromJSON(in []byte) ([]*ControlPolicy, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*ControlPolicyMapping, len(rw.Response.Items))
+	out := make([]*ControlPolicy, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
 	for i, rb := range rw.Response.Items {
-		b, err := controlPolicyMappingFromJSON(rb)
+		b, err := controlPolicyFromJSON(rb)
 		if err != nil {
 			return nil, err
 		}
@@ -139,48 +159,55 @@ func controlPolicyMappingsFromJSON(in []byte) ([]*ControlPolicyMapping, error) {
 	return out, nil
 }
 
-func controlPolicyMappingsFromHttpResponse(resp *http.Response) ([]*ControlPolicyMapping, error) {
+func controlPoliciesFromHttpResponse(resp *http.Response) ([]*ControlPolicy, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	return controlPolicyMappingsFromJSON(body)
+	return controlPolicysFromJSON(body)
 }
 
 //endregion
 
 //region Setters
 
-func (o ControlPolicyMapping) MarshalJSON() ([]byte, error) {
-	type noMethod ControlPolicyMapping
+func (o ControlPolicy) MarshalJSON() ([]byte, error) {
+	type noMethod ControlPolicy
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ControlPolicyMapping) SetControlPolicyId(v *string) *ControlPolicyMapping {
-	if o.ControlPolicyId = v; o.ControlPolicyId == nil {
-		o.nullFields = append(o.nullFields, "ControlPolicyId")
+func (o *ControlPolicy) SetID(v *string) *ControlPolicy {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
 
-func (o *ControlPolicyMapping) SetTargetId(v *string) *ControlPolicyMapping {
-	if o.TargetId = v; o.TargetId == nil {
-		o.nullFields = append(o.nullFields, "TargetId")
+func (o *ControlPolicy) SetName(v *string) *ControlPolicy {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
 
-func (o *ControlPolicyMapping) SetTargetType(v *string) *ControlPolicyMapping {
-	if o.TargetType = v; o.TargetType == nil {
-		o.nullFields = append(o.nullFields, "TargetType")
+func (o *ControlPolicy) SetDescription(v *string) *ControlPolicy {
+	if o.Description = v; o.Description == nil {
+		o.nullFields = append(o.nullFields, "Description")
 	}
 	return o
 }
 
-func (o *ControlPolicyMapping) SetEnforcementLevel(v *string) *ControlPolicyMapping {
-	if o.EnforcementLevel = v; o.EnforcementLevel == nil {
-		o.nullFields = append(o.nullFields, "EnforcementLevel")
+func (o *ControlPolicy) SetType(v *string) *ControlPolicy {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *ControlPolicy) SetParameters(v *map[string]interface{}) *ControlPolicy {
+	if o.Parameters = v; o.Parameters == nil {
+		o.nullFields = append(o.nullFields, "Parameters")
 	}
 	return o
 }
