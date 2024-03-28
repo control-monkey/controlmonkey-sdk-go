@@ -17,4 +17,5 @@ var (
 	EventSubscriptionScopeTypes       = []string{OrganizationScope, NamespaceScope}
 	EventSubscriptionProtocolTypes    = []string{SlackProtocol, TeamsProtocol}
 	ReportTypes                       = []string{WeeklyReportType}
+	SeverityTypes                     = []string{SeverityLow, SeverityMedium, SeverityHigh, SeverityCritical}
 )

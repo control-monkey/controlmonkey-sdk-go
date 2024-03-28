@@ -6,30 +6,30 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
 )
 
-//region ControlPolicyGroupMapping
+//region ControlPolicyGroup
 
 // region Structure
 
-type ControlPolicyGroupMapping struct {
-	ControlPolicyGroupId *string                `json:"controlPolicyGroupId,omitempty"`
-	TargetId             *string                `json:"targetId,omitempty"`
-	TargetType           *string                `json:"targetType,omitempty"`       //commons.PolicyMappingTargetTypes
-	EnforcementLevel     *string                `json:"enforcementLevel,omitempty"` //commons.GroupEnforcementLevelTypes
-	OverrideEnforcements []*OverrideEnforcement `json:"overrideEnforcements,omitempty"`
+type ControlPolicyGroup struct {
+	ID              *string          `json:"id,omitempty"` // read-only
+	Name            *string          `json:"name,omitempty"`
+	Description     *string          `json:"description,omitempty"`
+	ControlPolicies []*ControlPolicy `json:"controlPolicies,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type OverrideEnforcement struct {
-	ControlPolicyId  *string   `json:"controlPolicyId,omitempty"`
-	EnforcementLevel *string   `json:"enforcementLevel,omitempty"`
-	StackIds         []*string `json:"stackIds,omitempty"` //commons.EnforcementLevelTypes
+type ControlPolicy struct {
+	ControlPolicyId *string `json:"controlPolicyId,omitempty"` // read-only
+	Severity        *string `json:"severity,omitempty"`        //commons.SeverityTypes
 
 	forceSendFields []string
 	nullFields      []string
@@ -39,8 +39,8 @@ type OverrideEnforcement struct {
 
 //region Methods
 
-func (s *ServiceOp) CreateControlPolicyGroupMapping(ctx context.Context, input *ControlPolicyGroupMapping) (*ControlPolicyGroupMapping, error) {
-	r := client.NewRequest(http.MethodPost, "/controlPolicyGroup/controlPolicyGroupMapping")
+func (s *ServiceOp) CreateControlPolicyGroup(ctx context.Context, input *ControlPolicyGroup) (*ControlPolicyGroup, error) {
+	r := client.NewRequest(http.MethodPost, "/controlPolicyGroup")
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -49,39 +49,52 @@ func (s *ServiceOp) CreateControlPolicyGroupMapping(ctx context.Context, input *
 	}
 	defer resp.Body.Close()
 
-	controlPolicyGroupMapping, err := controlPolicyGroupMappingsFromHttpResponse(resp)
+	controlPolicyGroup, err := controlPoliciesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(ControlPolicyGroupMapping)
-	if len(controlPolicyGroupMapping) > 0 {
-		output = controlPolicyGroupMapping[0]
+	output := new(ControlPolicyGroup)
+	if len(controlPolicyGroup) > 0 {
+		output = controlPolicyGroup[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) ListControlPolicyGroupMappings(ctx context.Context, controlPolicyGroupId string) ([]*ControlPolicyGroupMapping, error) {
-	r := client.NewRequest(http.MethodGet, "/controlPolicyGroup/controlPolicyGroupMapping")
-	r.Params.Set("controlPolicyGroupId", controlPolicyGroupId)
+func (s *ServiceOp) ReadControlPolicyGroup(ctx context.Context, controlPolicyGroupId string) (*ControlPolicyGroup, error) {
+	path, err := uritemplates.Expand("/controlPolicyGroup/{controlPolicyGroupId}", uritemplates.Values{"controlPolicyGroupId": controlPolicyGroupId})
+	if err != nil {
+		return nil, err
+	}
 
+	r := client.NewRequest(http.MethodGet, path)
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	output, err := controlPolicyGroupMappingsFromHttpResponse(resp)
+	controlPolicyGroup, err := controlPoliciesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
+	}
+
+	output := new(ControlPolicyGroup)
+	if len(controlPolicyGroup) > 0 {
+		output = controlPolicyGroup[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) UpdateControlPolicyGroupMapping(ctx context.Context, input *ControlPolicyGroupMapping) (*ControlPolicyGroupMapping, error) {
-	r := client.NewRequest(http.MethodPut, "/controlPolicyGroup/controlPolicyGroupMapping")
+func (s *ServiceOp) UpdateControlPolicyGroup(ctx context.Context, id string, input *ControlPolicyGroup) (*ControlPolicyGroup, error) {
+	path, err := uritemplates.Expand("/controlPolicyGroup/{controlPolicyGroupId}", uritemplates.Values{"controlPolicyGroupId": id})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -90,23 +103,27 @@ func (s *ServiceOp) UpdateControlPolicyGroupMapping(ctx context.Context, input *
 	}
 	defer resp.Body.Close()
 
-	controlPolicyGroupMapping, err := controlPolicyGroupMappingsFromHttpResponse(resp)
+	controlPolicyGroup, err := controlPoliciesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(ControlPolicyGroupMapping)
+	output := new(ControlPolicyGroup)
 
-	if len(controlPolicyGroupMapping) > 0 {
-		output = controlPolicyGroupMapping[0]
+	if len(controlPolicyGroup) > 0 {
+		output = controlPolicyGroup[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) DeleteControlPolicyGroupMapping(ctx context.Context, input *ControlPolicyGroupMapping) (*commons.EmptyResponse, error) {
-	r := client.NewRequest(http.MethodDelete, "/controlPolicyGroup/controlPolicyGroupMapping")
-	r.Obj = input
+func (s *ServiceOp) DeleteControlPolicyGroup(ctx context.Context, id string) (*commons.EmptyResponse, error) {
+	path, err := uritemplates.Expand("/controlPolicyGroup/{controlPolicyGroupId}", uritemplates.Values{"controlPolicyGroupId": id})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodDelete, path)
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -122,25 +139,25 @@ func (s *ServiceOp) DeleteControlPolicyGroupMapping(ctx context.Context, input *
 
 //region Private Methods
 
-func controlPolicyGroupMappingFromJSON(in []byte) (*ControlPolicyGroupMapping, error) {
-	b := new(ControlPolicyGroupMapping)
+func controlPolicyGroupFromJSON(in []byte) (*ControlPolicyGroup, error) {
+	b := new(ControlPolicyGroup)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
 
-func controlPolicyGroupMappingsFromJSON(in []byte) ([]*ControlPolicyGroupMapping, error) {
+func controlPolicyGroupsFromJSON(in []byte) ([]*ControlPolicyGroup, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*ControlPolicyGroupMapping, len(rw.Response.Items))
+	out := make([]*ControlPolicyGroup, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
 	for i, rb := range rw.Response.Items {
-		b, err := controlPolicyGroupMappingFromJSON(rb)
+		b, err := controlPolicyGroupFromJSON(rb)
 		if err != nil {
 			return nil, err
 		}
@@ -149,84 +166,70 @@ func controlPolicyGroupMappingsFromJSON(in []byte) ([]*ControlPolicyGroupMapping
 	return out, nil
 }
 
-func controlPolicyGroupMappingsFromHttpResponse(resp *http.Response) ([]*ControlPolicyGroupMapping, error) {
+func controlPoliciesFromHttpResponse(resp *http.Response) ([]*ControlPolicyGroup, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	return controlPolicyGroupMappingsFromJSON(body)
+	return controlPolicyGroupsFromJSON(body)
 }
 
 //endregion
 
 //region Setters
 
-func (o ControlPolicyGroupMapping) MarshalJSON() ([]byte, error) {
-	type noMethod ControlPolicyGroupMapping
+func (o ControlPolicyGroup) MarshalJSON() ([]byte, error) {
+	type noMethod ControlPolicyGroup
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ControlPolicyGroupMapping) SetControlPolicyGroupId(v *string) *ControlPolicyGroupMapping {
-	if o.ControlPolicyGroupId = v; o.ControlPolicyGroupId == nil {
-		o.nullFields = append(o.nullFields, "ControlPolicyGroupId")
+func (o *ControlPolicyGroup) SetID(v *string) *ControlPolicyGroup {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
 
-func (o *ControlPolicyGroupMapping) SetTargetId(v *string) *ControlPolicyGroupMapping {
-	if o.TargetId = v; o.TargetId == nil {
-		o.nullFields = append(o.nullFields, "TargetId")
+func (o *ControlPolicyGroup) SetName(v *string) *ControlPolicyGroup {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
 
-func (o *ControlPolicyGroupMapping) SetTargetType(v *string) *ControlPolicyGroupMapping {
-	if o.TargetType = v; o.TargetType == nil {
-		o.nullFields = append(o.nullFields, "TargetType")
+func (o *ControlPolicyGroup) SetDescription(v *string) *ControlPolicyGroup {
+	if o.Description = v; o.Description == nil {
+		o.nullFields = append(o.nullFields, "Description")
 	}
 	return o
 }
 
-func (o *ControlPolicyGroupMapping) SetEnforcementLevel(v *string) *ControlPolicyGroupMapping {
-	if o.EnforcementLevel = v; o.EnforcementLevel == nil {
-		o.nullFields = append(o.nullFields, "EnforcementLevel")
+func (o *ControlPolicyGroup) SetControlPolicies(v []*ControlPolicy) *ControlPolicyGroup {
+	if o.ControlPolicies = v; o.ControlPolicies == nil {
+		o.nullFields = append(o.nullFields, "ControlPolicies")
 	}
 	return o
 }
 
-func (o *ControlPolicyGroupMapping) SetOverrideEnforcements(v []*OverrideEnforcement) *ControlPolicyGroupMapping {
-	if o.OverrideEnforcements = v; o.OverrideEnforcements == nil {
-		o.nullFields = append(o.nullFields, "OverrideEnforcements")
-	}
-	return o
-}
+//region ControlPolicies
 
-//region Override Enforcement
-
-func (o OverrideEnforcement) MarshalJSON() ([]byte, error) {
-	type noMethod OverrideEnforcement
+func (o ControlPolicy) MarshalJSON() ([]byte, error) {
+	type noMethod ControlPolicy
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *OverrideEnforcement) SetControlPolicyId(v *string) *OverrideEnforcement {
+func (o *ControlPolicy) SetControlPolicyId(v *string) *ControlPolicy {
 	if o.ControlPolicyId = v; o.ControlPolicyId == nil {
 		o.nullFields = append(o.nullFields, "ControlPolicyId")
 	}
 	return o
 }
 
-func (o *OverrideEnforcement) SetEnforcementLevel(v *string) *OverrideEnforcement {
-	if o.EnforcementLevel = v; o.EnforcementLevel == nil {
-		o.nullFields = append(o.nullFields, "EnforcementLevel")
-	}
-	return o
-}
-
-func (o *OverrideEnforcement) SetStackIds(v []*string) *OverrideEnforcement {
-	if o.StackIds = v; o.StackIds == nil {
-		o.nullFields = append(o.nullFields, "StackIds")
+func (o *ControlPolicy) SetSeverity(v *string) *ControlPolicy {
+	if o.Severity = v; o.Severity == nil {
+		o.nullFields = append(o.nullFields, "Severity")
 	}
 	return o
 }

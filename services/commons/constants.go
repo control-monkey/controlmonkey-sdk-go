@@ -57,4 +57,9 @@ const (
 	TeamsProtocol = "teams"
 
 	WeeklyReportType = "weeklyReport"
+
+	SeverityLow      = "low"
+	SeverityMedium   = "medium"
+	SeverityHigh     = "high"
+	SeverityCritical = "critical"
 )
