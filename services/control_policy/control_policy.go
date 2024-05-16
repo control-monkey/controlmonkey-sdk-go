@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
 
@@ -50,6 +51,33 @@ func (s *ServiceOp) CreateControlPolicy(ctx context.Context, input *ControlPolic
 	output := new(ControlPolicy)
 	if len(controlPolicy) > 0 {
 		output = controlPolicy[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ListControlPolicies(ctx context.Context, controlPolicyId *string, controlPolicyName *string, isManaged *bool) ([]*ControlPolicy, error) {
+	r := client.NewRequest(http.MethodGet, "/controlPolicy")
+
+	if controlPolicyId != nil {
+		r.Params.Set("controlPolicyId", *controlPolicyId)
+	}
+	if controlPolicyName != nil {
+		r.Params.Set("controlPolicyName", *controlPolicyName)
+	}
+	if isManaged != nil {
+		r.Params.Set("isManaged", strconv.FormatBool(*isManaged))
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	output, err := controlPoliciesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
 	}
 
 	return output, nil

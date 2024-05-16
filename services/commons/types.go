@@ -13,7 +13,7 @@ var (
 	PolicyMappingTargetTypes          = []string{StackTargetType, NamespaceTargetType}
 	EnforcementLevelTypes             = []string{Warning, SoftMandatory, HardMandatory}
 	GroupEnforcementLevelTypes        = []string{Warning, SoftMandatory, HardMandatory, BySeverity}
-	NamespaceRoleTypes                = []string{NamespaceRoleViewer, NamespaceRoleDeployer, NamespaceRoleAdmin}
+	NamespaceRoleTypes                = []string{NamespaceRoleViewer, NamespaceRoleAdmin}
 	EventSubscriptionScopeTypes       = []string{OrganizationScope, NamespaceScope}
 	EventSubscriptionProtocolTypes    = []string{SlackProtocol, TeamsProtocol}
 	ReportTypes                       = []string{WeeklyReportType}

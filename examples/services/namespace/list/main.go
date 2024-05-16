@@ -4,10 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/stack"
+	"github.com/control-monkey/controlmonkey-sdk-go/services/namespace"
 )
 
 func main() {
@@ -22,22 +21,33 @@ func main() {
 	// Optional controlmonkey.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// services specific configuration.
-	svc := stack.New(sess)
+	svc := namespace.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
-	// Read stack.
-	stackId := "stk-kpajfm381w123123"
-	out, err := svc.ReadStack(ctx, stackId)
+	// List namespaces.
+	namespaceId := "ns-7x4pqdfdt1"
+	out, err := svc.ListNamespaces(ctx, &namespaceId, nil)
 	if err != nil {
-		log.Fatalf("Control Monkey: failed to read stack: %v", err)
+		log.Fatalf("Control Monkey: failed to read namespace: %v", err)
 	}
 
-	// Output stack, if exists.
+	// Output namespace, if exists.
 	if out != nil {
-		log.Printf("Stack %q: %s",
-			controlmonkey.StringValue(out.ID),
+		log.Printf("Namespaces: %s",
+			stringutil.Stringify(out))
+	}
+
+	name := "Dev"
+	out, err = svc.ListNamespaces(ctx, nil, &name)
+	if err != nil {
+		log.Fatalf("Control Monkey: failed to read namespace: %v", err)
+	}
+
+	// Output namespace, if exists.
+	if out != nil {
+		log.Printf("Namespaces: %s",
 			stringutil.Stringify(out))
 	}
 }

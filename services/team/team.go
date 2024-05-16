@@ -65,6 +65,30 @@ func (s *ServiceOp) CreateTeam(ctx context.Context, input *Team) (*Team, error) 
 	return output, nil
 }
 
+func (s *ServiceOp) ListTeams(ctx context.Context, teamId *string, teamName *string) ([]*Team, error) {
+	r := client.NewRequest(http.MethodGet, "/iam/org/team")
+
+	if teamId != nil {
+		r.Params.Set("teamId", *teamId)
+	}
+	if teamName != nil {
+		r.Params.Set("teamName", *teamName)
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	output, err := teamsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+
 func (s *ServiceOp) ReadTeam(ctx context.Context, teamId string) (*Team, error) {
 	path, err := uritemplates.Expand("/iam/org/team/{teamId}", uritemplates.Values{"teamId": teamId})
 	if err != nil {

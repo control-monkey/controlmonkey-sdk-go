@@ -14,6 +14,7 @@ import (
 // the service.
 type Service interface {
 	CreateTemplate(context.Context, *Template) (*Template, error)
+	ListTemplates(context.Context, *string, *string) ([]*Template, error)
 	ReadTemplate(context.Context, string) (*Template, error)
 	UpdateTemplate(context.Context, string, *Template) (*Template, error)
 	DeleteTemplate(context.Context, string) (*commons.EmptyResponse, error)

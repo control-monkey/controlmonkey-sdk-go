@@ -20,6 +20,7 @@ const (
 // the service.
 type Service interface {
 	CreateNotificationEndpoint(context.Context, *Endpoint) (*Endpoint, error)
+	ListNotificationEndpoints(context.Context, *string, *string) ([]*Endpoint, error)
 	ReadNotificationEndpoint(context.Context, string) (*Endpoint, error)
 	UpdateNotificationEndpoint(context.Context, string, *Endpoint) (*Endpoint, error)
 	DeleteNotificationEndpoint(context.Context, string) (*commons.EmptyResponse, error)

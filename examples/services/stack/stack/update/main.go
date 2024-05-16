@@ -37,9 +37,9 @@ func main() {
 	}
 
 	// Output stack, if was updated.
-	if out.Stack != nil {
+	if out != nil {
 		log.Printf("Stack %q: %s",
-			controlmonkey.StringValue(out.Stack.ID),
-			stringutil.Stringify(out.Stack))
+			controlmonkey.StringValue(out.ID),
+			stringutil.Stringify(out))
 	}
 }

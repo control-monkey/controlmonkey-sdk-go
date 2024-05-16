@@ -13,9 +13,10 @@ import (
 // of the ControlMonkey API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	CreateStack(context.Context, *CreateStackInput) (*CreateStackOutput, error)
-	ReadStack(context.Context, string) (*ReadStackOutput, error)
-	UpdateStack(context.Context, string, *Stack) (*UpdateStackOutput, error)
+	CreateStack(context.Context, *Stack) (*Stack, error)
+	ListStacks(context.Context, *string, *string, *string) ([]*Stack, error)
+	ReadStack(context.Context, string) (*Stack, error)
+	UpdateStack(context.Context, string, *Stack) (*Stack, error)
 	DeleteStack(context.Context, string) (*commons.EmptyResponse, error)
 
 	CreateDeployment(context.Context, *CreateDeploymentInput) (*CreateDeploymentOutput, error)

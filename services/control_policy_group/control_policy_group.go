@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
 
@@ -49,7 +50,7 @@ func (s *ServiceOp) CreateControlPolicyGroup(ctx context.Context, input *Control
 	}
 	defer resp.Body.Close()
 
-	controlPolicyGroup, err := controlPoliciesFromHttpResponse(resp)
+	controlPolicyGroup, err := controlPolicyGroupsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +63,32 @@ func (s *ServiceOp) CreateControlPolicyGroup(ctx context.Context, input *Control
 	return output, nil
 }
 
+func (s *ServiceOp) ListControlPolicyGroups(ctx context.Context, controlPolicyGroupId *string, controlPolicyGroupName *string, isManaged *bool) ([]*ControlPolicyGroup, error) {
+	r := client.NewRequest(http.MethodGet, "/controlPolicyGroup")
+
+	if controlPolicyGroupId != nil {
+		r.Params.Set("controlPolicyGroupId", *controlPolicyGroupId)
+	}
+	if controlPolicyGroupName != nil {
+		r.Params.Set("controlPolicyGroupName", *controlPolicyGroupName)
+	}
+	if isManaged != nil {
+		r.Params.Set("isManaged", strconv.FormatBool(*isManaged))
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	output, err := controlPolicyGroupsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
 func (s *ServiceOp) ReadControlPolicyGroup(ctx context.Context, controlPolicyGroupId string) (*ControlPolicyGroup, error) {
 	path, err := uritemplates.Expand("/controlPolicyGroup/{controlPolicyGroupId}", uritemplates.Values{"controlPolicyGroupId": controlPolicyGroupId})
 	if err != nil {
@@ -75,7 +102,7 @@ func (s *ServiceOp) ReadControlPolicyGroup(ctx context.Context, controlPolicyGro
 	}
 	defer resp.Body.Close()
 
-	controlPolicyGroup, err := controlPoliciesFromHttpResponse(resp)
+	controlPolicyGroup, err := controlPolicyGroupsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +130,7 @@ func (s *ServiceOp) UpdateControlPolicyGroup(ctx context.Context, id string, inp
 	}
 	defer resp.Body.Close()
 
-	controlPolicyGroup, err := controlPoliciesFromHttpResponse(resp)
+	controlPolicyGroup, err := controlPolicyGroupsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +193,7 @@ func controlPolicyGroupsFromJSON(in []byte) ([]*ControlPolicyGroup, error) {
 	return out, nil
 }
 
-func controlPoliciesFromHttpResponse(resp *http.Response) ([]*ControlPolicyGroup, error) {
+func controlPolicyGroupsFromHttpResponse(resp *http.Response) ([]*ControlPolicyGroup, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
