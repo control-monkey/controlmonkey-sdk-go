@@ -49,9 +49,8 @@ const (
 	HardMandatory = "hardMandatory"
 	BySeverity    = "bySeverity"
 
-	NamespaceRoleViewer   = "viewer"
-	NamespaceRoleDeployer = "deployer"
-	NamespaceRoleAdmin    = "admin"
+	NamespaceRoleViewer = "viewer"
+	NamespaceRoleAdmin  = "admin"
 
 	SlackProtocol = "slack"
 	TeamsProtocol = "teams"

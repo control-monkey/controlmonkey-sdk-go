@@ -28,17 +28,6 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	policy := &namespace.Policy{
-		TtlConfig: &namespace.TtlConfig{
-			MaxTtl: &namespace.TtlDefinition{
-				Type:  controlmonkey.String("hours"),
-				Value: controlmonkey.Int(3),
-			},
-			DefaultTtl: &namespace.TtlDefinition{
-				Type:  controlmonkey.String("hours"),
-				Value: controlmonkey.Int(2),
-			}}}
-
 	externalCredentials1 := namespace.ExternalCredentials{
 		Type:                  controlmonkey.String("awsAssumeRole"),
 		ExternalCredentialsId: controlmonkey.String("ext-stage"),
@@ -59,7 +48,6 @@ func main() {
 		Name:                controlmonkey.String("go namespace"),
 		Description:         controlmonkey.String("description"),
 		ExternalCredentials: externalCredentials,
-		Policy:              policy,
 		IacConfig: &namespace.IacConfig{
 			TerraformVersion:  controlmonkey.String("1.5.0"),
 			TerragruntVersion: controlmonkey.String("0.39.0"),
@@ -85,9 +73,9 @@ func main() {
 	}
 
 	// Output namespace, if was created.
-	if out.Namespace != nil {
+	if out != nil {
 		log.Printf("Namespace %q: %s",
-			controlmonkey.StringValue(out.Namespace.ID),
-			stringutil.Stringify(out.Namespace))
+			controlmonkey.StringValue(out.ID),
+			stringutil.Stringify(out))
 	}
 }

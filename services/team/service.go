@@ -14,6 +14,7 @@ import (
 // the service.
 type Service interface {
 	CreateTeam(context.Context, *Team) (*Team, error)
+	ListTeams(context.Context, *string, *string) ([]*Team, error)
 	ReadTeam(context.Context, string) (*Team, error)
 	UpdateTeam(context.Context, string, *Team) (*Team, error)
 	DeleteTeam(context.Context, string) (*commons.EmptyResponse, error)

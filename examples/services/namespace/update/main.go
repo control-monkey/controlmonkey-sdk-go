@@ -37,9 +37,9 @@ func main() {
 	}
 
 	// Output namespace, if was updated.
-	if out.Namespace != nil {
+	if out != nil {
 		log.Printf("Namespace %q: %s",
-			controlmonkey.StringValue(out.Namespace.ID),
-			stringutil.Stringify(out.Namespace))
+			controlmonkey.StringValue(out.ID),
+			stringutil.Stringify(out))
 	}
 }

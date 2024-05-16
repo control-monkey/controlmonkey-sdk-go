@@ -45,7 +45,7 @@ func main() {
 			Path:       controlmonkey.String("path"),
 			Branch:     controlmonkey.String("main"),
 		},
-		RunTrigger: &stack.RunTrigger{Patterns: controlmonkey.StringSlice()},
+		RunTrigger: &stack.RunTrigger{Patterns: controlmonkey.StringSlice("a")},
 		IacConfig: &stack.IacConfig{
 			TerraformVersion: controlmonkey.String("1.4.5"),
 		},
@@ -73,15 +73,15 @@ func main() {
 		Data:        data,
 	}
 	// Create stack.
-	out, err := svc.CreateStack(ctx, &stack.CreateStackInput{Stack: s})
+	out, err := svc.CreateStack(ctx, s)
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to create stack: %v", err)
 	}
 
 	// Output stack, if was created.
-	if out.Stack != nil {
+	if out != nil {
 		log.Printf("Stack %q: %s",
-			controlmonkey.StringValue(out.Stack.ID),
-			stringutil.Stringify(out.Stack))
+			controlmonkey.StringValue(out.ID),
+			stringutil.Stringify(out))
 	}
 }

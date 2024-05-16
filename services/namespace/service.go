@@ -13,9 +13,10 @@ import (
 // of the ControlMonkey API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	CreateNamespace(context.Context, *Namespace) (*CreateNamespaceOutput, error)
-	ReadNamespace(context.Context, string) (*ReadNamespaceOutput, error)
-	UpdateNamespace(context.Context, string, *Namespace) (*UpdateNamespaceOutput, error)
+	CreateNamespace(context.Context, *Namespace) (*Namespace, error)
+	ListNamespaces(context.Context, *string, *string) ([]*Namespace, error)
+	ReadNamespace(context.Context, string) (*Namespace, error)
+	UpdateNamespace(context.Context, string, *Namespace) (*Namespace, error)
 	DeleteNamespace(context.Context, string) (*commons.EmptyResponse, error)
 }
 

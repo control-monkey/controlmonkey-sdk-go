@@ -14,6 +14,7 @@ import (
 // the service.
 type Service interface {
 	CreateControlPolicyGroup(context.Context, *ControlPolicyGroup) (*ControlPolicyGroup, error)
+	ListControlPolicyGroups(context.Context, *string, *string, *bool) ([]*ControlPolicyGroup, error)
 	ReadControlPolicyGroup(context.Context, string) (*ControlPolicyGroup, error)
 	UpdateControlPolicyGroup(context.Context, string, *ControlPolicyGroup) (*ControlPolicyGroup, error)
 	DeleteControlPolicyGroup(context.Context, string) (*commons.EmptyResponse, error)

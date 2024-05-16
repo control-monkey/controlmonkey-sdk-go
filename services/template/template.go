@@ -97,6 +97,30 @@ func (s *ServiceOp) CreateTemplate(ctx context.Context, input *Template) (*Templ
 	return output, nil
 }
 
+func (s *ServiceOp) ListTemplates(ctx context.Context, templateId *string, templateName *string) ([]*Template, error) {
+	r := client.NewRequest(http.MethodGet, "/template")
+
+	if templateId != nil {
+		r.Params.Set("templateId", *templateId)
+	}
+	if templateName != nil {
+		r.Params.Set("templateName", *templateName)
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	templates, err := templatesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return templates, nil
+}
+
 func (s *ServiceOp) ReadTemplate(ctx context.Context, templateId string) (*Template, error) {
 	path, err := uritemplates.Expand("/template/{templateId}", uritemplates.Values{
 		"templateId": templateId,

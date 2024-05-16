@@ -139,39 +139,15 @@ type AutoSync struct {
 
 //endregion
 
-//region Requests & Responses
-
-type ListStacksParams struct {
-	NamespaceId *string
-}
-
-type ListStacksOutput struct {
-	Stacks []*Stack `json:"stacks,omitempty"`
-}
+//region Methods
 
 type CreateStackInput struct {
 	Stack *Stack `json:"stack,omitempty"`
 }
 
-type CreateStackOutput struct {
-	Stack *Stack `json:"stack,omitempty"`
-}
-
-type ReadStackOutput struct {
-	Stack *Stack `json:"stack,omitempty"`
-}
-
-type UpdateStackOutput struct {
-	Stack *Stack `json:"stack,omitempty"`
-}
-
-//endregion
-
-//region Methods
-
-func (s *ServiceOp) CreateStack(ctx context.Context, input *CreateStackInput) (*CreateStackOutput, error) {
+func (s *ServiceOp) CreateStack(ctx context.Context, input *Stack) (*Stack, error) {
 	r := client.NewRequest(http.MethodPost, "/stack")
-	r.Obj = input
+	r.Obj = CreateStackInput{input}
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -184,15 +160,42 @@ func (s *ServiceOp) CreateStack(ctx context.Context, input *CreateStackInput) (*
 		return nil, err
 	}
 
-	output := new(CreateStackOutput)
+	output := new(Stack)
 	if len(stack) > 0 {
-		output.Stack = stack[0]
+		output = stack[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) ReadStack(ctx context.Context, stackId string) (*ReadStackOutput, error) {
+func (s *ServiceOp) ListStacks(ctx context.Context, stackId *string, stackName *string, namespaceId *string) ([]*Stack, error) {
+	r := client.NewRequest(http.MethodGet, "/stack")
+
+	if stackId != nil {
+		r.Params.Set("stackId", *stackId)
+	}
+	if stackName != nil {
+		r.Params.Set("stackName", *stackName)
+	}
+	if namespaceId != nil {
+		r.Params.Set("namespaceId", *namespaceId)
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	output, err := stacksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ReadStack(ctx context.Context, stackId string) (*Stack, error) {
 	path, err := uritemplates.Expand("/stack/{stackId}", uritemplates.Values{
 		"stackId": stackId,
 	})
@@ -212,15 +215,15 @@ func (s *ServiceOp) ReadStack(ctx context.Context, stackId string) (*ReadStackOu
 		return nil, err
 	}
 
-	output := new(ReadStackOutput)
+	output := new(Stack)
 	if len(stack) > 0 {
-		output.Stack = stack[0]
+		output = stack[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) UpdateStack(ctx context.Context, stackId string, input *Stack) (*UpdateStackOutput, error) {
+func (s *ServiceOp) UpdateStack(ctx context.Context, stackId string, input *Stack) (*Stack, error) {
 	path, err := uritemplates.Expand("/stack/{stackId}", uritemplates.Values{"stackId": stackId})
 	if err != nil {
 		return nil, err
@@ -240,9 +243,9 @@ func (s *ServiceOp) UpdateStack(ctx context.Context, stackId string, input *Stac
 		return nil, err
 	}
 
-	output := new(UpdateStackOutput)
+	output := new(Stack)
 	if len(stack) > 0 {
-		output.Stack = stack[0]
+		output = stack[0]
 	}
 
 	return output, nil

@@ -53,7 +53,7 @@ func (s *ServiceOp) CreateNotificationEndpoint(ctx context.Context, input *Endpo
 	}
 	defer resp.Body.Close()
 
-	endpoint, err := endpointFromHttpResponse(resp)
+	endpoint, err := endpointsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -61,6 +61,30 @@ func (s *ServiceOp) CreateNotificationEndpoint(ctx context.Context, input *Endpo
 	output := new(Endpoint)
 	if len(endpoint) > 0 {
 		output = endpoint[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ListNotificationEndpoints(ctx context.Context, endpointId *string, endpointName *string) ([]*Endpoint, error) {
+	r := client.NewRequest(http.MethodGet, baseUrl+endpointUrl)
+
+	if endpointId != nil {
+		r.Params.Set("endpointId", *endpointId)
+	}
+	if endpointName != nil {
+		r.Params.Set("endpointName", *endpointName)
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	output, err := endpointsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
 	}
 
 	return output, nil
@@ -79,7 +103,7 @@ func (s *ServiceOp) ReadNotificationEndpoint(ctx context.Context, endpointId str
 	}
 	defer resp.Body.Close()
 
-	endpoint, err := endpointFromHttpResponse(resp)
+	endpoint, err := endpointsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +131,7 @@ func (s *ServiceOp) UpdateNotificationEndpoint(ctx context.Context, endpointId s
 	}
 	defer resp.Body.Close()
 
-	endpoint, err := endpointFromHttpResponse(resp)
+	endpoint, err := endpointsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -168,7 +192,7 @@ func endpointsFromJSON(in []byte) ([]*Endpoint, error) {
 	return out, nil
 }
 
-func endpointFromHttpResponse(resp *http.Response) ([]*Endpoint, error) {
+func endpointsFromHttpResponse(resp *http.Response) ([]*Endpoint, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err

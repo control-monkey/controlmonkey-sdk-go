@@ -22,7 +22,6 @@ type Namespace struct {
 	Name                     *string                   `json:"name,omitempty"`
 	Description              *string                   `json:"description,omitempty"`
 	ExternalCredentials      []*ExternalCredentials    `json:"externalCredentials,omitempty"`
-	Policy                   *Policy                   `json:"policy,omitempty"`
 	IacConfig                *IacConfig                `json:"iacConfig,omitempty"`
 	RunnerConfig             *RunnerConfig             `json:"runnerConfig,omitempty"`
 	DeploymentApprovalPolicy *DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
@@ -35,29 +34,6 @@ type ExternalCredentials struct {
 	Type                  *string `json:"type,omitempty"` //commons.ExternalCredentialTypes
 	ExternalCredentialsId *string `json:"externalCredentialsId,omitempty"`
 	AwsProfileName        *string `json:"awsProfileName,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type Policy struct {
-	TtlConfig *TtlConfig `json:"ttlConfig,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type TtlConfig struct {
-	MaxTtl     *TtlDefinition `json:"maxTtl,omitempty"`
-	DefaultTtl *TtlDefinition `json:"defaultTtl,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type TtlDefinition struct {
-	Type  *string `json:"type,omitempty"` //commons.TtlTypes
-	Value *int    `json:"value,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -91,29 +67,9 @@ type DeploymentApprovalPolicy struct {
 
 //endregion
 
-//region Requests & Responses
-
-type ListNamespacesOutput struct {
-	Namespaces []*Namespace `json:"namespaces,omitempty"`
-}
-
-type CreateNamespaceOutput struct {
-	Namespace *Namespace `json:"namespace,omitempty"`
-}
-
-type ReadNamespaceOutput struct {
-	Namespace *Namespace `json:"namespace,omitempty"`
-}
-
-type UpdateNamespaceOutput struct {
-	Namespace *Namespace `json:"namespace,omitempty"`
-}
-
-//endregion
-
 //region Methods
 
-func (s *ServiceOp) CreateNamespace(ctx context.Context, input *Namespace) (*CreateNamespaceOutput, error) {
+func (s *ServiceOp) CreateNamespace(ctx context.Context, input *Namespace) (*Namespace, error) {
 	r := client.NewRequest(http.MethodPost, "/namespace")
 	r.Obj = input
 
@@ -128,15 +84,39 @@ func (s *ServiceOp) CreateNamespace(ctx context.Context, input *Namespace) (*Cre
 		return nil, err
 	}
 
-	output := new(CreateNamespaceOutput)
+	output := new(Namespace)
 	if len(namespace) > 0 {
-		output.Namespace = namespace[0]
+		output = namespace[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) ReadNamespace(ctx context.Context, namespaceId string) (*ReadNamespaceOutput, error) {
+func (s *ServiceOp) ListNamespaces(ctx context.Context, namespaceId *string, namespaceName *string) ([]*Namespace, error) {
+	r := client.NewRequest(http.MethodGet, "/namespace")
+
+	if namespaceId != nil {
+		r.Params.Set("namespaceId", *namespaceId)
+	}
+	if namespaceName != nil {
+		r.Params.Set("namespaceName", *namespaceName)
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	namespaces, err := namespacesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return namespaces, nil
+}
+
+func (s *ServiceOp) ReadNamespace(ctx context.Context, namespaceId string) (*Namespace, error) {
 	path, err := uritemplates.Expand("/namespace/{namespaceId}", uritemplates.Values{"namespaceId": namespaceId})
 	if err != nil {
 		return nil, err
@@ -154,15 +134,15 @@ func (s *ServiceOp) ReadNamespace(ctx context.Context, namespaceId string) (*Rea
 		return nil, err
 	}
 
-	output := new(ReadNamespaceOutput)
+	output := new(Namespace)
 	if len(namespace) > 0 {
-		output.Namespace = namespace[0]
+		output = namespace[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) UpdateNamespace(ctx context.Context, namespaceId string, input *Namespace) (*UpdateNamespaceOutput, error) {
+func (s *ServiceOp) UpdateNamespace(ctx context.Context, namespaceId string, input *Namespace) (*Namespace, error) {
 	path, err := uritemplates.Expand("/namespace/{namespaceId}", uritemplates.Values{"namespaceId": namespaceId})
 	if err != nil {
 		return nil, err
@@ -182,9 +162,9 @@ func (s *ServiceOp) UpdateNamespace(ctx context.Context, namespaceId string, inp
 		return nil, err
 	}
 
-	output := new(UpdateNamespaceOutput)
+	output := new(Namespace)
 	if len(namespace) > 0 {
-		output.Namespace = namespace[0]
+		output = namespace[0]
 	}
 
 	return output, nil
@@ -286,13 +266,6 @@ func (o *Namespace) SetExternalCredentials(v []*ExternalCredentials) *Namespace 
 	return o
 }
 
-func (o *Namespace) SetPolicy(v *Policy) *Namespace {
-	if o.Policy = v; o.Policy == nil {
-		o.nullFields = append(o.nullFields, "Policy")
-	}
-	return o
-}
-
 func (o *Namespace) SetIacConfig(v *IacConfig) *Namespace {
 	if o.IacConfig = v; o.IacConfig == nil {
 		o.nullFields = append(o.nullFields, "IacConfig")
@@ -341,51 +314,6 @@ func (o *ExternalCredentials) SetExternalCredentialsId(v *string) *ExternalCrede
 func (o *ExternalCredentials) SetAwsProfileName(v *string) *ExternalCredentials {
 	if o.AwsProfileName = v; o.AwsProfileName == nil {
 		o.nullFields = append(o.nullFields, "AwsProfileName")
-	}
-	return o
-}
-
-//endregion
-
-//region Policy
-
-func (o Policy) MarshalJSON() ([]byte, error) {
-	type noMethod Policy
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *Policy) SetTtlConfig(v *TtlConfig) *Policy {
-	if o.TtlConfig = v; o.TtlConfig == nil {
-		o.nullFields = append(o.nullFields, "TtlConfig")
-	}
-	return o
-}
-
-func (o *TtlConfig) SetMaxTtl(v *TtlDefinition) *TtlConfig {
-	if o.MaxTtl = v; o.MaxTtl == nil {
-		o.nullFields = append(o.nullFields, "MaxTtl")
-	}
-	return o
-}
-
-func (o *TtlConfig) SetDefaultTtl(v *TtlDefinition) *TtlConfig {
-	if o.DefaultTtl = v; o.DefaultTtl == nil {
-		o.nullFields = append(o.nullFields, "DefaultTtl")
-	}
-	return o
-}
-
-func (o *TtlDefinition) SetType(v *string) *TtlDefinition {
-	if o.Type = v; o.Type == nil {
-		o.nullFields = append(o.nullFields, "Type")
-	}
-	return o
-}
-
-func (o *TtlDefinition) SetValue(v *int) *TtlDefinition {
-	if o.Value = v; o.Value == nil {
-		o.nullFields = append(o.nullFields, "Value")
 	}
 	return o
 }
