@@ -61,4 +61,7 @@ const (
 	SeverityMedium   = "medium"
 	SeverityHigh     = "high"
 	SeverityCritical = "critical"
+
+	RoleViewer = "viewer"
+	RoleAdmin  = "admin"
 )

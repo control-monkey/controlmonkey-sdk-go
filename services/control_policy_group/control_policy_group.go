@@ -63,7 +63,7 @@ func (s *ServiceOp) CreateControlPolicyGroup(ctx context.Context, input *Control
 	return output, nil
 }
 
-func (s *ServiceOp) ListControlPolicyGroups(ctx context.Context, controlPolicyGroupId *string, controlPolicyGroupName *string, isManaged *bool) ([]*ControlPolicyGroup, error) {
+func (s *ServiceOp) ListControlPolicyGroups(ctx context.Context, controlPolicyGroupId *string, controlPolicyGroupName *string, includeManaged *bool) ([]*ControlPolicyGroup, error) {
 	r := client.NewRequest(http.MethodGet, "/controlPolicyGroup")
 
 	if controlPolicyGroupId != nil {
@@ -72,8 +72,8 @@ func (s *ServiceOp) ListControlPolicyGroups(ctx context.Context, controlPolicyGr
 	if controlPolicyGroupName != nil {
 		r.Params.Set("controlPolicyGroupName", *controlPolicyGroupName)
 	}
-	if isManaged != nil {
-		r.Params.Set("isManaged", strconv.FormatBool(*isManaged))
+	if includeManaged != nil {
+		r.Params.Set("includeManaged", strconv.FormatBool(*includeManaged))
 	}
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))

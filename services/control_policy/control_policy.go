@@ -56,7 +56,7 @@ func (s *ServiceOp) CreateControlPolicy(ctx context.Context, input *ControlPolic
 	return output, nil
 }
 
-func (s *ServiceOp) ListControlPolicies(ctx context.Context, controlPolicyId *string, controlPolicyName *string, isManaged *bool) ([]*ControlPolicy, error) {
+func (s *ServiceOp) ListControlPolicies(ctx context.Context, controlPolicyId *string, controlPolicyName *string, includeManaged *bool) ([]*ControlPolicy, error) {
 	r := client.NewRequest(http.MethodGet, "/controlPolicy")
 
 	if controlPolicyId != nil {
@@ -65,8 +65,8 @@ func (s *ServiceOp) ListControlPolicies(ctx context.Context, controlPolicyId *st
 	if controlPolicyName != nil {
 		r.Params.Set("controlPolicyName", *controlPolicyName)
 	}
-	if isManaged != nil {
-		r.Params.Set("isManaged", strconv.FormatBool(*isManaged))
+	if includeManaged != nil {
+		r.Params.Set("includeManaged", strconv.FormatBool(*includeManaged))
 	}
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
