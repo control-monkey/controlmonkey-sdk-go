@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 
+	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
@@ -37,7 +39,7 @@ func main() {
 		IsSensitive:   controlmonkey.Bool(false),
 		IsOverridable: controlmonkey.Bool(false),
 		Description:   controlmonkey.String("variable description"),
-		ValueConditions: []*variable.Condition{
+		ValueConditions: []*cross_models.Condition{
 			{
 				Operator: controlmonkey.String("in"),
 				Value:    controlmonkey.Any(controlmonkey.StringSlice("value", "value2")),

@@ -33,14 +33,14 @@ type Stack struct {
 }
 
 type Data struct {
-	DeploymentBehavior       *DeploymentBehavior       `json:"deploymentBehavior,omitempty"`
-	DeploymentApprovalPolicy *DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
-	VcsInfo                  *VcsInfo                  `json:"vcsInfo,omitempty"`
-	RunTrigger               *RunTrigger               `json:"runTrigger,omitempty"`
-	IacConfig                *IacConfig                `json:"iacConfig,omitempty"`
-	Policy                   *Policy                   `json:"policy,omitempty"`
-	RunnerConfig             *RunnerConfig             `json:"runnerConfig,omitempty"`
-	AutoSync                 *AutoSync                 `json:"autoSync,omitempty"`
+	DeploymentBehavior       *DeploymentBehavior                    `json:"deploymentBehavior,omitempty"`
+	DeploymentApprovalPolicy *cross_models.DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
+	VcsInfo                  *VcsInfo                               `json:"vcsInfo,omitempty"`
+	RunTrigger               *RunTrigger                            `json:"runTrigger,omitempty"`
+	IacConfig                *IacConfig                             `json:"iacConfig,omitempty"`
+	Policy                   *Policy                                `json:"policy,omitempty"`
+	RunnerConfig             *RunnerConfig                          `json:"runnerConfig,omitempty"`
+	AutoSync                 *AutoSync                              `json:"autoSync,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -49,13 +49,6 @@ type Data struct {
 type DeploymentBehavior struct {
 	DeployOnPush    *bool `json:"deployOnPush,omitempty"`
 	WaitForApproval *bool `json:"waitForApproval,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type DeploymentApprovalPolicy struct {
-	Rules []*cross_models.DeploymentApprovalPolicyRule `json:"rules,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -371,7 +364,7 @@ func (o *Data) SetDeploymentBehavior(v *DeploymentBehavior) *Data {
 	return o
 }
 
-func (o *Data) SetDeploymentApprovalPolicy(v *DeploymentApprovalPolicy) *Data {
+func (o *Data) SetDeploymentApprovalPolicy(v *cross_models.DeploymentApprovalPolicy) *Data {
 	if o.DeploymentApprovalPolicy = v; o.DeploymentApprovalPolicy == nil {
 		o.nullFields = append(o.nullFields, "DeploymentApprovalPolicy")
 	}
@@ -440,23 +433,6 @@ func (o *DeploymentBehavior) SetDeployOnPush(v *bool) *DeploymentBehavior {
 func (o *DeploymentBehavior) SetWaitForApproval(v *bool) *DeploymentBehavior {
 	if o.WaitForApproval = v; o.WaitForApproval == nil {
 		o.nullFields = append(o.nullFields, "WaitForApproval")
-	}
-	return o
-}
-
-//endregion
-
-//region Deployment Approval Policy
-
-func (o DeploymentApprovalPolicy) MarshalJSON() ([]byte, error) {
-	type noMethod DeploymentApprovalPolicy
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *DeploymentApprovalPolicy) SetRules(v []*cross_models.DeploymentApprovalPolicyRule) *DeploymentApprovalPolicy {
-	if o.Rules = v; o.Rules == nil {
-		o.nullFields = append(o.nullFields, "Rules")
 	}
 	return o
 }

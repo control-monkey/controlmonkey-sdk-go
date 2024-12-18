@@ -62,6 +62,12 @@ func main() {
 				{
 					Type: controlmonkey.String("requireTwoApprovals"),
 				},
+				{
+					Type: controlmonkey.String("requireTeamsApproval"),
+					Parameters: &map[string]interface{}{
+						"teams": controlmonkey.StringSlice("team-123"),
+					},
+				},
 			},
 			OverrideBehavior: controlmonkey.String("allow"),
 		},
