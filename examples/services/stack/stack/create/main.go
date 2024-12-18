@@ -32,7 +32,7 @@ func main() {
 		DeploymentBehavior: &stack.DeploymentBehavior{
 			DeployOnPush: controlmonkey.Bool(false),
 		},
-		DeploymentApprovalPolicy: &stack.DeploymentApprovalPolicy{
+		DeploymentApprovalPolicy: &cross_models.DeploymentApprovalPolicy{
 			Rules: []*cross_models.DeploymentApprovalPolicyRule{
 				{
 					Type: controlmonkey.String("requireApproval"),

@@ -13,7 +13,11 @@ import (
 // of the ControlMonkey API. See this package's package overview docs for details on
 // the service.
 type Service interface {
+	CreateBlueprint(context.Context, *Blueprint) (*Blueprint, error)
 	ListBlueprints(context.Context, *string, *string) ([]*Blueprint, error)
+	ReadBlueprint(context.Context, string) (*Blueprint, error)
+	UpdateBlueprint(context.Context, string, *Blueprint) (*Blueprint, error)
+	DeleteBlueprint(context.Context, string) (*commons.EmptyResponse, error)
 
 	ListBlueprintNamespaceMappings(context.Context, string) ([]*BlueprintNamespaceMapping, error)
 	CreateBlueprintNamespaceMapping(context.Context, *BlueprintNamespaceMapping) (*BlueprintNamespaceMapping, error)

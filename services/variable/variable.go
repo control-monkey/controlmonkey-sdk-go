@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
@@ -19,17 +21,18 @@ import (
 //region Structure
 
 type Variable struct {
-	ID              *string      `json:"id,omitempty"`    // read-only
-	Scope           *string      `json:"scope,omitempty"` //commons.VariableScopeTypes
-	ScopeId         *string      `json:"scopeId,omitempty"`
-	Key             *string      `json:"key,omitempty"`
-	Value           *string      `json:"value,omitempty"`
-	Type            *string      `json:"type,omitempty"` //commons.VariableTypes
-	IsSensitive     *bool        `json:"isSensitive,omitempty"`
-	IsOverridable   *bool        `json:"isOverridable,omitempty"`
-	IsRequired      *bool        `json:"isRequired,omitempty"`
-	Description     *string      `json:"description,omitempty"`
-	ValueConditions []*Condition `json:"valueConditions,omitempty"`
+	ID              *string                   `json:"id,omitempty"`    // read-only
+	Scope           *string                   `json:"scope,omitempty"` //commons.VariableScopeTypes
+	ScopeId         *string                   `json:"scopeId,omitempty"`
+	Key             *string                   `json:"key,omitempty"`
+	Value           *string                   `json:"value,omitempty"`
+	DisplayName     *string                   `json:"displayName,omitempty"`
+	Type            *string                   `json:"type,omitempty"` //commons.VariableTypes
+	IsSensitive     *bool                     `json:"isSensitive,omitempty"`
+	IsOverridable   *bool                     `json:"isOverridable,omitempty"`
+	IsRequired      *bool                     `json:"isRequired,omitempty"`
+	Description     *string                   `json:"description,omitempty"`
+	ValueConditions []*cross_models.Condition `json:"valueConditions,omitempty"`
 
 	// forceSendFields is a read of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -46,15 +49,6 @@ type Variable struct {
 	// null. It is an error if a field in this read has a non-empty value.
 	// This may be used to include null fields in Patch requests.
 	nullFields []string
-}
-
-type Condition struct {
-	Operator *string   `json:"operator,omitempty"` //commons.VariableConditionOperatorTypes
-	Value    *any      `json:"value,omitempty"`
-	Values   []*string // logical field to store Value if Value is a Slice
-
-	forceSendFields []string
-	nullFields      []string
 }
 
 //endregion
@@ -317,6 +311,13 @@ func (o *Variable) SetValue(v *string) *Variable {
 	return o
 }
 
+func (o *Variable) SetDisplayName(v *string) *Variable {
+	if o.DisplayName = v; o.DisplayName == nil {
+		o.nullFields = append(o.nullFields, "DisplayName")
+	}
+	return o
+}
+
 func (o *Variable) SetIsSensitive(v *bool) *Variable {
 	if o.IsSensitive = v; o.IsSensitive == nil {
 		o.nullFields = append(o.nullFields, "IsSensitive")
@@ -347,62 +348,12 @@ func (o *Variable) SetDescription(v *string) *Variable {
 	return o
 }
 
-func (o *Variable) SetValueConditions(v []*Condition) *Variable {
+func (o *Variable) SetValueConditions(v []*cross_models.Condition) *Variable {
 	if o.ValueConditions = v; o.ValueConditions == nil {
 		o.nullFields = append(o.nullFields, "ValueConditions")
 	}
 	return o
 }
-
-// region Value Conditions
-
-func (o *Condition) UnmarshalJSON(data []byte) error {
-	type C Condition
-	if err := json.Unmarshal(data, (*C)(o)); err != nil {
-		return err
-	}
-
-	m := make(map[string]interface{})
-
-	if err := json.Unmarshal(data, &m); err != nil {
-		return err
-	}
-
-	if *o.Operator == commons.In {
-		values := make([]*string, 0)
-		for _, element := range m["value"].([]interface{}) {
-			values = append(values, controlmonkey.String(element.(string)))
-		}
-		o.Values = values
-	} else {
-		var val = m["value"]
-		o.Value = &val
-	}
-
-	return nil
-}
-
-func (o Condition) MarshalJSON() ([]byte, error) {
-	type noMethod Condition
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *Condition) SetOperator(v *string) *Condition {
-	if o.Operator = v; o.Operator == nil {
-		o.nullFields = append(o.nullFields, "Operator")
-	}
-	return o
-}
-
-func (o *Condition) SetValue(v *any) *Condition {
-	if o.Value = v; o.Value == nil {
-		o.nullFields = append(o.nullFields, "Value")
-	}
-	return o
-}
-
-//endregion
 
 //endregion
 

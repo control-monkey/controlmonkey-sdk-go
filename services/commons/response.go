@@ -4,6 +4,7 @@ type EmptyResponse struct{}
 
 // Error codes
 const (
-	ErrorCodeNotFound     = "not_found"
-	ErrorCodeAlreadyExist = "already_exist"
+	ErrorCodeNotFound        = "not_found"
+	ErrorCodeAlreadyExist    = "already_exist"
+	ErrorCodeValidationError = "validation_error"
 )

@@ -3,9 +3,10 @@ package custom_abac_configuration
 import (
 	"context"
 	"encoding/json"
-	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
 	"io"
 	"net/http"
+
+	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/uritemplates"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
