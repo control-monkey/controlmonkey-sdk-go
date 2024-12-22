@@ -64,4 +64,7 @@ const (
 
 	RoleViewer = "viewer"
 	RoleAdmin  = "admin"
+
+	Default = "default"
+	Manual  = "manual"
 )

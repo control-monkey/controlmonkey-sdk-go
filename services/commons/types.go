@@ -18,4 +18,5 @@ var (
 	EventSubscriptionProtocolTypes    = []string{SlackProtocol, TeamsProtocol}
 	ReportTypes                       = []string{WeeklyReportType}
 	SeverityTypes                     = []string{SeverityLow, SeverityMedium, SeverityHigh, SeverityCritical}
+	DisasterRecoveryBackupModeTypes   = []string{Default, Manual}
 )
