@@ -16,7 +16,7 @@ import (
 const (
 	// defaultBaseURL is the default base URL of the ControlMonkey API.
 	// It is used e.g. when initializing a new Client without a specific address.
-	defaultBaseURL = "https://api.controlmonkey.io"
+	defaultBaseURL = "http://localhost:2800"
 
 	// defaultContentType is the default content type to use when making HTTP calls.
 	defaultContentType = "application/json"

@@ -42,6 +42,19 @@ func main() {
 				AwsAccountId: controlmonkey.String("123456789"),
 			},
 		},
+		AzureStorageStateFilesLocations: []*organization.AzureStorageStateFilesLocation{
+			{
+				StorageAccountName:  controlmonkey.String("storacc1"),
+				ContainerName:       controlmonkey.String("tfstate2"),
+				AzureSubscriptionId: controlmonkey.String("00000000-0000-0000-0000-000000000000"),
+			},
+		},
+		GcsStateFilesLocations: []*organization.GcsStateFilesLocation{
+			{
+				GcpProjectId: controlmonkey.String("my-gcp-project"),
+				BucketName:   controlmonkey.String("tfstate-bucket2"),
+			},
+		},
 		RunnerConfig: &organization.RunnerConfig{
 			Mode:          controlmonkey.String("selfHosted"),
 			Groups:        []*string{controlmonkey.String("default")},
