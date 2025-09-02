@@ -47,6 +47,9 @@ type StackConfiguration struct {
 	IacType                  *string                                `json:"iacType,omitempty"`
 	VcsInfoWithPatterns      *StackVcsInfoWithPatterns              `json:"vcsInfo,omitempty"`
 	DeploymentApprovalPolicy *cross_models.DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
+	RunTrigger               *cross_models.RunTrigger               `json:"runTrigger,omitempty"`
+	IacConfig                *cross_models.IacConfig                `json:"iacConfig,omitempty"`
+	AutoSync                 *cross_models.AutoSync                 `json:"autoSync,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -367,6 +370,27 @@ func (o *StackConfiguration) SetDeploymentApprovalPolicy(v *cross_models.Deploym
 	return o
 }
 
+func (o *StackConfiguration) SetRunTrigger(v *cross_models.RunTrigger) *StackConfiguration {
+	if o.RunTrigger = v; o.RunTrigger == nil {
+		o.nullFields = append(o.nullFields, "RunTrigger")
+	}
+	return o
+}
+
+func (o *StackConfiguration) SetIacConfig(v *cross_models.IacConfig) *StackConfiguration {
+	if o.IacConfig = v; o.IacConfig == nil {
+		o.nullFields = append(o.nullFields, "IacConfig")
+	}
+	return o
+}
+
+func (o *StackConfiguration) SetAutoSync(v *cross_models.AutoSync) *StackConfiguration {
+	if o.AutoSync = v; o.AutoSync == nil {
+		o.nullFields = append(o.nullFields, "AutoSync")
+	}
+	return o
+}
+
 //region StackVcsInfoWithPatterns
 
 func (o StackVcsInfoWithPatterns) MarshalJSON() ([]byte, error) {
@@ -435,8 +459,6 @@ func (o *SubstituteParameter) SetValueConditions(v []*cross_models.Condition) *S
 	}
 	return o
 }
-
-//endregion
 
 //endregion
 

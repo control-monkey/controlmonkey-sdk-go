@@ -36,11 +36,11 @@ type Data struct {
 	DeploymentBehavior       *DeploymentBehavior                    `json:"deploymentBehavior,omitempty"`
 	DeploymentApprovalPolicy *cross_models.DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
 	VcsInfo                  *VcsInfo                               `json:"vcsInfo,omitempty"`
-	RunTrigger               *RunTrigger                            `json:"runTrigger,omitempty"`
-	IacConfig                *IacConfig                             `json:"iacConfig,omitempty"`
+	RunTrigger               *cross_models.RunTrigger               `json:"runTrigger,omitempty"`
+	IacConfig                *cross_models.IacConfig                `json:"iacConfig,omitempty"`
 	Policy                   *Policy                                `json:"policy,omitempty"`
 	RunnerConfig             *RunnerConfig                          `json:"runnerConfig,omitempty"`
-	AutoSync                 *AutoSync                              `json:"autoSync,omitempty"`
+	AutoSync                 *cross_models.AutoSync                 `json:"autoSync,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -378,14 +378,14 @@ func (o *Data) SetVcsInfo(v *VcsInfo) *Data {
 	return o
 }
 
-func (o *Data) SetRunTrigger(v *RunTrigger) *Data {
+func (o *Data) SetRunTrigger(v *cross_models.RunTrigger) *Data {
 	if o.RunTrigger = v; o.RunTrigger == nil {
 		o.nullFields = append(o.nullFields, "RunTrigger")
 	}
 	return o
 }
 
-func (o *Data) SetIacConfig(v *IacConfig) *Data {
+func (o *Data) SetIacConfig(v *cross_models.IacConfig) *Data {
 	if o.IacConfig = v; o.IacConfig == nil {
 		o.nullFields = append(o.nullFields, "IacConfig")
 	}
@@ -406,7 +406,7 @@ func (o *Data) SetRunnerConfig(v *RunnerConfig) *Data {
 	return o
 }
 
-func (o *Data) SetAutoSync(v *AutoSync) *Data {
+func (o *Data) SetAutoSync(v *cross_models.AutoSync) *Data {
 	if o.AutoSync = v; o.AutoSync == nil {
 		o.nullFields = append(o.nullFields, "AutoSync")
 	}
