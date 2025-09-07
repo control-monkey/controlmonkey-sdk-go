@@ -32,6 +32,14 @@ func main() {
 		Name:     controlmonkey.String("endpoint1"),
 		Protocol: controlmonkey.String("slack"),
 		Url:      controlmonkey.String("https://slack.com/example"),
+		NotificationEndpointSlackAppConfig: &notification.NotificationEndpointSlackAppConfig{
+			NotificationSlackAppId: controlmonkey.String("nsa-REPLACE"),
+			ChannelId:              controlmonkey.String("C1234567890"),
+		},
+		EmailAddresses: []*string{
+			controlmonkey.String("example1@example.com"),
+			controlmonkey.String("example2@example.com"),
+		},
 	}
 
 	// Create notification.

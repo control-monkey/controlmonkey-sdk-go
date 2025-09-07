@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
@@ -28,10 +29,20 @@ func main() {
 	ctx := context.Background()
 
 	// Update notification endpoint.
-	notificationEndpointId := "ne-p3p0vmuhde"
+	notificationEndpointId := os.Getenv("CONTROL_MONKEY_NOTIFICATION_ENDPOINT_ID")
+	if notificationEndpointId == "" {
+		log.Fatalf("CONTROL_MONKEY_NOTIFICATION_ENDPOINT_ID is not set")
+	}
 	t, err := svc.UpdateNotificationEndpoint(ctx, notificationEndpointId, &notification.Endpoint{
 		Name: controlmonkey.String("notification endpoint2"),
 		Url:  controlmonkey.String("x2"),
+		NotificationEndpointSlackAppConfig: &notification.NotificationEndpointSlackAppConfig{
+			NotificationSlackAppId: controlmonkey.String("nsa-REPLACE"),
+			ChannelId:              controlmonkey.String("C0987654321"),
+		},
+		EmailAddresses: []*string{
+			controlmonkey.String("example3@example.com"),
+		},
 	})
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to update notification endpoint: %v", err)
