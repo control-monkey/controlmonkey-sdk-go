@@ -24,6 +24,11 @@ type Service interface {
 
 	CreatePlan(context.Context, *CreatePlanInput) (*CreatePlanOutput, error)
 	ReadPlan(context.Context, *ReadPlanInput) (*ReadPlanOutput, error)
+
+	CreateDependency(context.Context, *Dependency) (*Dependency, error)
+	ReadDependency(context.Context, string) (*Dependency, error)
+	UpdateDependency(context.Context, string, *Dependency) (*Dependency, error)
+	DeleteDependency(context.Context, string) (*commons.EmptyResponse, error)
 }
 
 type ServiceOp struct {
