@@ -28,7 +28,7 @@ func main() {
 	}
 
 	data := &stack.Data{
-		DeploymentBehavior: &stack.DeploymentBehavior{DeployOnPush: controlmonkey.Bool(false)},
+		DeploymentBehavior: &cross_models.DeploymentBehavior{DeployOnPush: controlmonkey.Bool(false)},
 		DeploymentApprovalPolicy: &cross_models.DeploymentApprovalPolicy{
 			Rules: []*cross_models.DeploymentApprovalPolicyRule{{Type: controlmonkey.String("requireApproval")}},
 		},
@@ -41,7 +41,7 @@ func main() {
 		RunTrigger:   &cross_models.RunTrigger{Patterns: controlmonkey.StringSlice("*")},
 		IacConfig:    &cross_models.IacConfig{TerraformVersion: controlmonkey.String("1.4.5")},
 		Policy:       &stack.Policy{TtlConfig: &stack.TtlConfig{Ttl: &stack.TtlDefinition{Type: controlmonkey.String("hours"), Value: controlmonkey.Int(3)}}},
-		RunnerConfig: &stack.RunnerConfig{Mode: controlmonkey.String("managed")},
+		RunnerConfig: &cross_models.RunnerConfig{Mode: controlmonkey.String("managed")},
 		AutoSync:     &cross_models.AutoSync{DeployWhenDriftDetected: controlmonkey.Bool(true)},
 	}
 

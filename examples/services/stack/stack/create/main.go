@@ -29,7 +29,7 @@ func main() {
 	ctx := context.Background()
 
 	data := &stack.Data{
-		DeploymentBehavior: &stack.DeploymentBehavior{
+		DeploymentBehavior: &cross_models.DeploymentBehavior{
 			DeployOnPush: controlmonkey.Bool(false),
 		},
 		DeploymentApprovalPolicy: &cross_models.DeploymentApprovalPolicy{
@@ -57,7 +57,7 @@ func main() {
 				},
 			},
 		},
-		RunnerConfig: &stack.RunnerConfig{
+		RunnerConfig: &cross_models.RunnerConfig{
 			Mode: controlmonkey.String("managed"),
 		},
 		AutoSync: &cross_models.AutoSync{

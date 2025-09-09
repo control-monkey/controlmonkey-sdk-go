@@ -33,22 +33,14 @@ type Stack struct {
 }
 
 type Data struct {
-	DeploymentBehavior       *DeploymentBehavior                    `json:"deploymentBehavior,omitempty"`
+	DeploymentBehavior       *cross_models.DeploymentBehavior       `json:"deploymentBehavior,omitempty"`
 	DeploymentApprovalPolicy *cross_models.DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
 	VcsInfo                  *VcsInfo                               `json:"vcsInfo,omitempty"`
 	RunTrigger               *cross_models.RunTrigger               `json:"runTrigger,omitempty"`
 	IacConfig                *cross_models.IacConfig                `json:"iacConfig,omitempty"`
 	Policy                   *Policy                                `json:"policy,omitempty"`
-	RunnerConfig             *RunnerConfig                          `json:"runnerConfig,omitempty"`
+	RunnerConfig             *cross_models.RunnerConfig             `json:"runnerConfig,omitempty"`
 	AutoSync                 *cross_models.AutoSync                 `json:"autoSync,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type DeploymentBehavior struct {
-	DeployOnPush    *bool `json:"deployOnPush,omitempty"`
-	WaitForApproval *bool `json:"waitForApproval,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -91,14 +83,6 @@ type TtlOverride struct {
 	Type          *string    `json:"type,omitempty"` //commons.TtlTypes
 	Value         *int       `json:"value,omitempty"`
 	EffectiveFrom *time.Time `json:"effectiveFrom,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type RunnerConfig struct {
-	Mode   *string   `json:"mode,omitempty"` //commons.RunnerConfigModeTypes
-	Groups []*string `json:"groups,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -331,7 +315,7 @@ func (o Data) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Data) SetDeploymentBehavior(v *DeploymentBehavior) *Data {
+func (o *Data) SetDeploymentBehavior(v *cross_models.DeploymentBehavior) *Data {
 	if o.DeploymentBehavior = v; o.DeploymentBehavior == nil {
 		o.nullFields = append(o.nullFields, "DeploymentBehavior")
 	}
@@ -373,7 +357,7 @@ func (o *Data) SetPolicy(v *Policy) *Data {
 	return o
 }
 
-func (o *Data) SetRunnerConfig(v *RunnerConfig) *Data {
+func (o *Data) SetRunnerConfig(v *cross_models.RunnerConfig) *Data {
 	if o.RunnerConfig = v; o.RunnerConfig == nil {
 		o.nullFields = append(o.nullFields, "RunnerConfig")
 	}
@@ -383,30 +367,6 @@ func (o *Data) SetRunnerConfig(v *RunnerConfig) *Data {
 func (o *Data) SetAutoSync(v *cross_models.AutoSync) *Data {
 	if o.AutoSync = v; o.AutoSync == nil {
 		o.nullFields = append(o.nullFields, "AutoSync")
-	}
-	return o
-}
-
-//endregion
-
-//region Deployment Behavior
-
-func (o DeploymentBehavior) MarshalJSON() ([]byte, error) {
-	type noMethod DeploymentBehavior
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *DeploymentBehavior) SetDeployOnPush(v *bool) *DeploymentBehavior {
-	if o.DeployOnPush = v; o.DeployOnPush == nil {
-		o.nullFields = append(o.nullFields, "DeployOnPush")
-	}
-	return o
-}
-
-func (o *DeploymentBehavior) SetWaitForApproval(v *bool) *DeploymentBehavior {
-	if o.WaitForApproval = v; o.WaitForApproval == nil {
-		o.nullFields = append(o.nullFields, "WaitForApproval")
 	}
 	return o
 }
@@ -522,30 +482,6 @@ func (o *TtlOverride) SetType(v *string) *TtlOverride {
 func (o *TtlOverride) SetValue(v *int) *TtlOverride {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
-	}
-	return o
-}
-
-//endregion
-
-//region Runner Config
-
-func (o RunnerConfig) MarshalJSON() ([]byte, error) {
-	type noMethod RunnerConfig
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *RunnerConfig) SetMode(v *string) *RunnerConfig {
-	if o.Mode = v; o.Mode == nil {
-		o.nullFields = append(o.nullFields, "Mode")
-	}
-	return o
-}
-
-func (o *RunnerConfig) SetGroups(v []*string) *RunnerConfig {
-	if o.Groups = v; o.Groups == nil {
-		o.nullFields = append(o.nullFields, "Groups")
 	}
 	return o
 }
