@@ -3,6 +3,7 @@ package template
 import (
 	"context"
 	"encoding/json"
+	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
 	"io"
 	"net/http"
 
@@ -17,13 +18,15 @@ import (
 // region Structure
 
 type Template struct {
-	ID                        *string  `json:"id,omitempty"` // read-only
-	Name                      *string  `json:"name,omitempty"`
-	IacType                   *string  `json:"iacType,omitempty"` //commons.IacTypes
-	Description               *string  `json:"description,omitempty"`
-	VcsInfo                   *VcsInfo `json:"vcsInfo,omitempty"`
-	Policy                    *Policy  `json:"policy,omitempty"`
-	SkipStateRefreshOnDestroy *bool    `json:"skipStateRefreshOnDestroy,omitempty"`
+	ID                        *string                    `json:"id,omitempty"` // read-only
+	Name                      *string                    `json:"name,omitempty"`
+	IacType                   *string                    `json:"iacType,omitempty"` //commons.IacTypes
+	Description               *string                    `json:"description,omitempty"`
+	VcsInfo                   *VcsInfo                   `json:"vcsInfo,omitempty"`
+	Policy                    *Policy                    `json:"policy,omitempty"`
+	SkipStateRefreshOnDestroy *bool                      `json:"skipStateRefreshOnDestroy,omitempty"`
+	IacConfig                 *IacConfig                 `json:"iacConfig,omitempty"`
+	RunnerConfig              *cross_models.RunnerConfig `json:"runnerConfig,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -57,6 +60,15 @@ type TtlConfig struct {
 type TtlDefinition struct {
 	Type  *string `json:"type,omitempty"` //commons.TtlTypes
 	Value *int    `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type IacConfig struct {
+	TerraformVersion  *string `json:"terraformVersion,omitempty"`
+	TerragruntVersion *string `json:"terragruntVersion,omitempty"`
+	OpentofuVersion   *string `json:"opentofuVersion,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -287,6 +299,20 @@ func (o *Template) SetSkipStateRefreshOnDestroy(v *bool) *Template {
 	return o
 }
 
+func (o *Template) SetIacConfig(v *IacConfig) *Template {
+	if o.IacConfig = v; o.IacConfig == nil {
+		o.nullFields = append(o.nullFields, "IacConfig")
+	}
+	return o
+}
+
+func (o *Template) SetRunnerConfig(v *cross_models.RunnerConfig) *Template {
+	if o.RunnerConfig = v; o.RunnerConfig == nil {
+		o.nullFields = append(o.nullFields, "RunnerConfig")
+	}
+	return o
+}
+
 //endregion
 
 //region VCS Info
@@ -378,6 +404,37 @@ func (o *TtlDefinition) SetType(v *string) *TtlDefinition {
 func (o *TtlDefinition) SetValue(v *int) *TtlDefinition {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+//endregion
+
+//region Iac Config
+
+func (o IacConfig) MarshalJSON() ([]byte, error) {
+	type noMethod IacConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *IacConfig) SetTerraformVersion(v *string) *IacConfig {
+	if o.TerraformVersion = v; o.TerraformVersion == nil {
+		o.nullFields = append(o.nullFields, "TerraformVersion")
+	}
+	return o
+}
+
+func (o *IacConfig) SetTerragruntVersion(v *string) *IacConfig {
+	if o.TerragruntVersion = v; o.TerragruntVersion == nil {
+		o.nullFields = append(o.nullFields, "TerragruntVersion")
+	}
+	return o
+}
+
+func (o *IacConfig) SetOpentofuVersion(v *string) *IacConfig {
+	if o.OpentofuVersion = v; o.OpentofuVersion == nil {
+		o.nullFields = append(o.nullFields, "OpentofuVersion")
 	}
 	return o
 }
