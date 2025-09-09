@@ -63,6 +63,17 @@ func main() {
 		AutoSync: &cross_models.AutoSync{
 			DeployWhenDriftDetected: controlmonkey.Bool(true),
 		},
+		Capabilities: &stack.Capabilities{
+			DeployOnPush: &stack.CapabilityConfig{
+				Status: controlmonkey.String("enabled"),
+			},
+			PlanOnPr: &stack.CapabilityConfig{
+				Status: controlmonkey.String("enabled"),
+			},
+			DriftDetection: &stack.CapabilityConfig{
+				Status: controlmonkey.String("disabled"),
+			},
+		},
 	}
 
 	s := &stack.Stack{

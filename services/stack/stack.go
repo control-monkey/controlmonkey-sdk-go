@@ -40,6 +40,7 @@ type Data struct {
 	IacConfig                *cross_models.IacConfig                `json:"iacConfig,omitempty"`
 	Policy                   *Policy                                `json:"policy,omitempty"`
 	RunnerConfig             *cross_models.RunnerConfig             `json:"runnerConfig,omitempty"`
+	Capabilities             *Capabilities                          `json:"capabilities,omitempty"`
 	AutoSync                 *cross_models.AutoSync                 `json:"autoSync,omitempty"`
 
 	forceSendFields []string
@@ -83,6 +84,22 @@ type TtlOverride struct {
 	Type          *string    `json:"type,omitempty"` //commons.TtlTypes
 	Value         *int       `json:"value,omitempty"`
 	EffectiveFrom *time.Time `json:"effectiveFrom,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Capabilities struct {
+	DeployOnPush   *CapabilityConfig `json:"deployOnPush,omitempty"`
+	PlanOnPr       *CapabilityConfig `json:"planOnPr,omitempty"`
+	DriftDetection *CapabilityConfig `json:"driftDetection,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type CapabilityConfig struct {
+	Status *string `json:"status,omitempty"` // enabled, disabled
 
 	forceSendFields []string
 	nullFields      []string
@@ -364,6 +381,13 @@ func (o *Data) SetRunnerConfig(v *cross_models.RunnerConfig) *Data {
 	return o
 }
 
+func (o *Data) SetCapabilities(v *Capabilities) *Data {
+	if o.Capabilities = v; o.Capabilities == nil {
+		o.nullFields = append(o.nullFields, "Capabilities")
+	}
+	return o
+}
+
 func (o *Data) SetAutoSync(v *cross_models.AutoSync) *Data {
 	if o.AutoSync = v; o.AutoSync == nil {
 		o.nullFields = append(o.nullFields, "AutoSync")
@@ -485,6 +509,54 @@ func (o *TtlOverride) SetValue(v *int) *TtlOverride {
 	}
 	return o
 }
+
+//endregion
+
+//region Stack Capability
+
+func (o Capabilities) MarshalJSON() ([]byte, error) {
+	type noMethod Capabilities
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Capabilities) SetDeployOnPush(v *CapabilityConfig) *Capabilities {
+	if o.DeployOnPush = v; o.DeployOnPush == nil {
+		o.nullFields = append(o.nullFields, "DeployOnPush")
+	}
+	return o
+}
+
+func (o *Capabilities) SetPlanOnPr(v *CapabilityConfig) *Capabilities {
+	if o.PlanOnPr = v; o.PlanOnPr == nil {
+		o.nullFields = append(o.nullFields, "PlanOnPr")
+	}
+	return o
+}
+
+func (o *Capabilities) SetDriftDetection(v *CapabilityConfig) *Capabilities {
+	if o.DriftDetection = v; o.DriftDetection == nil {
+		o.nullFields = append(o.nullFields, "DriftDetection")
+	}
+	return o
+}
+
+//region Capability Config
+
+func (o CapabilityConfig) MarshalJSON() ([]byte, error) {
+	type noMethod CapabilityConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *CapabilityConfig) SetStatus(v *string) *CapabilityConfig {
+	if o.Status = v; o.Status == nil {
+		o.nullFields = append(o.nullFields, "Status")
+	}
+	return o
+}
+
+//endregion
 
 //endregion
 

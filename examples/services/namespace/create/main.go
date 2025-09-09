@@ -71,6 +71,20 @@ func main() {
 			},
 			OverrideBehavior: controlmonkey.String("allow"),
 		},
+		Capabilities: &namespace.Capabilities{
+			DeployOnPush: &namespace.CapabilityConfig{
+				Status:        controlmonkey.String("enabled"),
+				IsOverridable: controlmonkey.Bool(true),
+			},
+			PlanOnPr: &namespace.CapabilityConfig{
+				Status:        controlmonkey.String("enabled"),
+				IsOverridable: controlmonkey.Bool(false),
+			},
+			DriftDetection: &namespace.CapabilityConfig{
+				Status:        controlmonkey.String("disabled"),
+				IsOverridable: controlmonkey.Bool(true),
+			},
+		},
 	}
 	// Create namespace.
 	out, err := svc.CreateNamespace(ctx, &n)
