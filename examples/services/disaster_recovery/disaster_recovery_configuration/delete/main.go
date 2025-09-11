@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/disaster_recovery"
 	"log"
+
+	"github.com/control-monkey/controlmonkey-sdk-go/services/disaster_recovery"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 )

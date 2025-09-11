@@ -29,7 +29,7 @@ func main() {
 	ctx := context.Background()
 
 	data := &stack.Data{
-		DeploymentBehavior: &stack.DeploymentBehavior{
+		DeploymentBehavior: &cross_models.DeploymentBehavior{
 			DeployOnPush: controlmonkey.Bool(false),
 		},
 		DeploymentApprovalPolicy: &cross_models.DeploymentApprovalPolicy{
@@ -45,8 +45,8 @@ func main() {
 			Path:       controlmonkey.String("path"),
 			Branch:     controlmonkey.String("main"),
 		},
-		RunTrigger: &stack.RunTrigger{Patterns: controlmonkey.StringSlice("a")},
-		IacConfig: &stack.IacConfig{
+		RunTrigger: &cross_models.RunTrigger{Patterns: controlmonkey.StringSlice("a")},
+		IacConfig: &cross_models.IacConfig{
 			TerraformVersion: controlmonkey.String("1.4.5"),
 		},
 		Policy: &stack.Policy{
@@ -57,11 +57,22 @@ func main() {
 				},
 			},
 		},
-		RunnerConfig: &stack.RunnerConfig{
+		RunnerConfig: &cross_models.RunnerConfig{
 			Mode: controlmonkey.String("managed"),
 		},
-		AutoSync: &stack.AutoSync{
+		AutoSync: &cross_models.AutoSync{
 			DeployWhenDriftDetected: controlmonkey.Bool(true),
+		},
+		Capabilities: &stack.Capabilities{
+			DeployOnPush: &stack.CapabilityConfig{
+				Status: controlmonkey.String("enabled"),
+			},
+			PlanOnPr: &stack.CapabilityConfig{
+				Status: controlmonkey.String("enabled"),
+			},
+			DriftDetection: &stack.CapabilityConfig{
+				Status: controlmonkey.String("disabled"),
+			},
 		},
 	}
 

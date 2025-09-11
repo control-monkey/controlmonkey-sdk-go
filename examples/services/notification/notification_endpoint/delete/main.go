@@ -26,7 +26,7 @@ func main() {
 	ctx := context.Background()
 
 	// Delete notification endpoint.
-	notificationEndpointId := "ne-4zgkqvamds"
+	notificationEndpointId := "ne-123"
 	_, err := svc.DeleteNotificationEndpoint(ctx, notificationEndpointId)
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to delete notification endpoint: %v", err)

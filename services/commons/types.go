@@ -15,8 +15,9 @@ var (
 	GroupEnforcementLevelTypes        = []string{Warning, SoftMandatory, HardMandatory, BySeverity}
 	NamespaceRoleTypes                = []string{NamespaceRoleViewer, NamespaceRoleAdmin}
 	EventSubscriptionScopeTypes       = []string{OrganizationScope, NamespaceScope}
-	EventSubscriptionProtocolTypes    = []string{SlackProtocol, TeamsProtocol}
+	EventSubscriptionProtocolTypes    = []string{SlackProtocol, SlackAppProtocol, TeamsProtocol, EmailProtocol}
 	ReportTypes                       = []string{WeeklyReportType}
 	SeverityTypes                     = []string{SeverityLow, SeverityMedium, SeverityHigh, SeverityCritical}
 	DisasterRecoveryBackupModeTypes   = []string{Default, Manual}
+	BlueprintVariableManagedByTypes   = []string{BlueprintVariableManagedByStack, BlueprintVariableManagedByInCode}
 )

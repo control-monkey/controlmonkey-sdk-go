@@ -13,6 +13,7 @@ const (
 	baseUrl         = "/notification"
 	endpointUrl     = "/endpoint"
 	subscriptionUrl = "/subscription"
+	slackAppUrl     = "/slackApp"
 )
 
 // Service provides the API operation methods for making requests to endpoints
@@ -28,6 +29,11 @@ type Service interface {
 	ListEventSubscriptions(context.Context, string, *string) ([]*EventSubscription, error)
 	CreateEventSubscription(context.Context, *EventSubscription) (*EventSubscription, error)
 	DeleteEventSubscription(context.Context, string) (*commons.EmptyResponse, error)
+
+	CreateNotificationSlackApp(context.Context, *NotificationSlackApp) (*NotificationSlackApp, error)
+	ListNotificationSlackApps(context.Context, *string, *string) ([]*NotificationSlackApp, error)
+	UpdateNotificationSlackApp(context.Context, string, *NotificationSlackApp) (*NotificationSlackApp, error)
+	DeleteNotificationSlackApp(context.Context, string) (*commons.EmptyResponse, error)
 }
 
 type ServiceOp struct {

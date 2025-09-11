@@ -22,6 +22,9 @@ type Endpoint struct {
 	Protocol *string `json:"protocol,omitempty"`
 	Url      *string `json:"url,omitempty"`
 
+	NotificationEndpointSlackAppConfig *NotificationEndpointSlackAppConfig `json:"notificationEndpointSlackAppConfig,omitempty"`
+	EmailAddresses                     []*string                           `json:"emailAddresses,omitempty"`
+
 	// forceSendFields is a read of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
 	// empty values are omitted from API requests. However, any non-pointer,
@@ -37,6 +40,14 @@ type Endpoint struct {
 	// null. It is an error if a field in this read has a non-empty value.
 	// This may be used to include null fields in Patch requests.
 	nullFields []string
+}
+
+type NotificationEndpointSlackAppConfig struct {
+	NotificationSlackAppId *string `json:"notificationSlackAppId,omitempty"`
+	ChannelId              *string `json:"channelId,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 //endregion
@@ -230,6 +241,44 @@ func (o *Endpoint) SetUrl(v *string) *Endpoint {
 	}
 	return o
 }
+
+func (o *Endpoint) SetNotificationEndpointSlackAppConfig(v *NotificationEndpointSlackAppConfig) *Endpoint {
+	if o.NotificationEndpointSlackAppConfig = v; o.NotificationEndpointSlackAppConfig == nil {
+		o.nullFields = append(o.nullFields, "NotificationEndpointSlackAppConfig")
+	}
+	return o
+}
+
+func (o *Endpoint) SetEmailAddresses(v []*string) *Endpoint {
+	if o.EmailAddresses = v; o.EmailAddresses == nil {
+		o.nullFields = append(o.nullFields, "EmailAddresses")
+	}
+	return o
+}
+
+//region NotificationEndpointSlackAppConfig
+
+func (o NotificationEndpointSlackAppConfig) MarshalJSON() ([]byte, error) {
+	type noMethod NotificationEndpointSlackAppConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *NotificationEndpointSlackAppConfig) SetNotificationSlackAppId(v *string) *NotificationEndpointSlackAppConfig {
+	if o.NotificationSlackAppId = v; o.NotificationSlackAppId == nil {
+		o.nullFields = append(o.nullFields, "NotificationSlackAppId")
+	}
+	return o
+}
+
+func (o *NotificationEndpointSlackAppConfig) SetChannelId(v *string) *NotificationEndpointSlackAppConfig {
+	if o.ChannelId = v; o.ChannelId == nil {
+		o.nullFields = append(o.nullFields, "ChannelId")
+	}
+	return o
+}
+
+//endregion
 
 //endregion
 

@@ -25,6 +25,7 @@ type Namespace struct {
 	IacConfig                *IacConfig                `json:"iacConfig,omitempty"`
 	RunnerConfig             *RunnerConfig             `json:"runnerConfig,omitempty"`
 	DeploymentApprovalPolicy *DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
+	Capabilities             *Capabilities             `json:"capabilities,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -60,6 +61,23 @@ type RunnerConfig struct {
 type DeploymentApprovalPolicy struct {
 	Rules            []*cross_models.DeploymentApprovalPolicyRule `json:"rules,omitempty"`
 	OverrideBehavior *string                                      `json:"overrideBehavior,omitempty"` //commons.OverrideBehaviorTypes
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Capabilities struct {
+	DeployOnPush   *CapabilityConfig `json:"deployOnPush,omitempty"`
+	PlanOnPr       *CapabilityConfig `json:"planOnPr,omitempty"`
+	DriftDetection *CapabilityConfig `json:"driftDetection,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type CapabilityConfig struct {
+	Status        *string `json:"status,omitempty"` // enabled/disabled
+	IsOverridable *bool   `json:"isOverridable,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -287,6 +305,13 @@ func (o *Namespace) SetDeploymentApprovalPolicy(v *DeploymentApprovalPolicy) *Na
 	return o
 }
 
+func (o *Namespace) SetCapabilities(v *Capabilities) *Namespace {
+	if o.Capabilities = v; o.Capabilities == nil {
+		o.nullFields = append(o.nullFields, "Capabilities")
+	}
+	return o
+}
+
 //endregion
 
 //region ExternalCredentials
@@ -403,6 +428,61 @@ func (o *DeploymentApprovalPolicy) SetOverrideBehavior(v *string) *DeploymentApp
 	}
 	return o
 }
+
+//endregion
+
+//region Namespace Capability
+
+func (o Capabilities) MarshalJSON() ([]byte, error) {
+	type noMethod Capabilities
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Capabilities) SetDeployOnPush(v *CapabilityConfig) *Capabilities {
+	if o.DeployOnPush = v; o.DeployOnPush == nil {
+		o.nullFields = append(o.nullFields, "DeployOnPush")
+	}
+	return o
+}
+
+func (o *Capabilities) SetPlanOnPr(v *CapabilityConfig) *Capabilities {
+	if o.PlanOnPr = v; o.PlanOnPr == nil {
+		o.nullFields = append(o.nullFields, "PlanOnPr")
+	}
+	return o
+}
+
+func (o *Capabilities) SetDriftDetection(v *CapabilityConfig) *Capabilities {
+	if o.DriftDetection = v; o.DriftDetection == nil {
+		o.nullFields = append(o.nullFields, "DriftDetection")
+	}
+	return o
+}
+
+//region Capability Config
+
+func (o CapabilityConfig) MarshalJSON() ([]byte, error) {
+	type noMethod CapabilityConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *CapabilityConfig) SetStatus(v *string) *CapabilityConfig {
+	if o.Status = v; o.Status == nil {
+		o.nullFields = append(o.nullFields, "Status")
+	}
+	return o
+}
+
+func (o *CapabilityConfig) SetIsOverridable(v *bool) *CapabilityConfig {
+	if o.IsOverridable = v; o.IsOverridable == nil {
+		o.nullFields = append(o.nullFields, "IsOverridable")
+	}
+	return o
+}
+
+//endregion
 
 //endregion
 

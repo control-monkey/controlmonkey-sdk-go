@@ -16,11 +16,13 @@ import (
 // region Structure
 
 type OrgConfiguration struct {
-	IacConfig             *IacConfig              `json:"iacConfig,omitempty"`
-	S3StateFilesLocations []*S3StateFilesLocation `json:"tfStateFilesS3Locations,omitempty"`
-	RunnerConfig          *RunnerConfig           `json:"runnerConfig,omitempty"`
-	SuppressedResources   *SuppressedResources    `json:"suppressedResources,omitempty"`
-	ReportConfigurations  []*ReportConfiguration  `json:"reportConfigurations,omitempty"`
+	IacConfig                       *IacConfig                        `json:"iacConfig,omitempty"`
+	S3StateFilesLocations           []*S3StateFilesLocation           `json:"tfStateFilesS3Locations,omitempty"`
+	AzureStorageStateFilesLocations []*AzureStorageStateFilesLocation `json:"tfStateFilesAzureStorageLocations,omitempty"`
+	GcsStateFilesLocations          []*GcsStateFilesLocation          `json:"tfStateFilesGcsLocations,omitempty"`
+	RunnerConfig                    *RunnerConfig                     `json:"runnerConfig,omitempty"`
+	SuppressedResources             *SuppressedResources              `json:"suppressedResources,omitempty"`
+	ReportConfigurations            []*ReportConfiguration            `json:"reportConfigurations,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -39,6 +41,23 @@ type S3StateFilesLocation struct {
 	BucketName   *string `json:"bucketName,omitempty"`
 	BucketRegion *string `json:"bucketRegion,omitempty"`
 	AwsAccountId *string `json:"awsAccountId,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AzureStorageStateFilesLocation struct {
+	StorageAccountName  *string `json:"storageAccountName,omitempty"`
+	ContainerName       *string `json:"containerName,omitempty"`
+	AzureSubscriptionId *string `json:"azureSubscriptionId,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type GcsStateFilesLocation struct {
+	BucketName   *string `json:"bucketName,omitempty"`
+	GcpProjectId *string `json:"gcpProjectId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -211,6 +230,20 @@ func (o *OrgConfiguration) SetTfStateFilesS3Locations(v []*S3StateFilesLocation)
 	return o
 }
 
+func (o *OrgConfiguration) SetTfStateFilesAzureStorageLocations(v []*AzureStorageStateFilesLocation) *OrgConfiguration {
+	if o.AzureStorageStateFilesLocations = v; o.AzureStorageStateFilesLocations == nil {
+		o.nullFields = append(o.nullFields, "AzureStorageStateFilesLocations")
+	}
+	return o
+}
+
+func (o *OrgConfiguration) SetTfStateFilesGcsLocations(v []*GcsStateFilesLocation) *OrgConfiguration {
+	if o.GcsStateFilesLocations = v; o.GcsStateFilesLocations == nil {
+		o.nullFields = append(o.nullFields, "GcsStateFilesLocations")
+	}
+	return o
+}
+
 func (o *OrgConfiguration) SetRunnerConfig(v *RunnerConfig) *OrgConfiguration {
 	if o.RunnerConfig = v; o.RunnerConfig == nil {
 		o.nullFields = append(o.nullFields, "RunnerConfig")
@@ -290,6 +323,61 @@ func (o *S3StateFilesLocation) SetBucketRegion(v *string) *S3StateFilesLocation 
 func (o *S3StateFilesLocation) SetAwsAccountId(v *string) *S3StateFilesLocation {
 	if o.AwsAccountId = v; o.AwsAccountId == nil {
 		o.nullFields = append(o.nullFields, "AwsAccountId")
+	}
+	return o
+}
+
+//endregion
+
+//region AzureStorageStateFilesLocation
+
+func (o AzureStorageStateFilesLocation) MarshalJSON() ([]byte, error) {
+	type noMethod AzureStorageStateFilesLocation
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AzureStorageStateFilesLocation) SetStorageAccountName(v *string) *AzureStorageStateFilesLocation {
+	if o.StorageAccountName = v; o.StorageAccountName == nil {
+		o.nullFields = append(o.nullFields, "StorageAccountName")
+	}
+	return o
+}
+
+func (o *AzureStorageStateFilesLocation) SetContainerName(v *string) *AzureStorageStateFilesLocation {
+	if o.ContainerName = v; o.ContainerName == nil {
+		o.nullFields = append(o.nullFields, "ContainerName")
+	}
+	return o
+}
+
+func (o *AzureStorageStateFilesLocation) SetAzureSubscriptionId(v *string) *AzureStorageStateFilesLocation {
+	if o.AzureSubscriptionId = v; o.AzureSubscriptionId == nil {
+		o.nullFields = append(o.nullFields, "AzureSubscriptionId")
+	}
+	return o
+}
+
+//endregion
+
+//region GcsStateFilesLocation
+
+func (o GcsStateFilesLocation) MarshalJSON() ([]byte, error) {
+	type noMethod GcsStateFilesLocation
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *GcsStateFilesLocation) SetBucketName(v *string) *GcsStateFilesLocation {
+	if o.BucketName = v; o.BucketName == nil {
+		o.nullFields = append(o.nullFields, "BucketName")
+	}
+	return o
+}
+
+func (o *GcsStateFilesLocation) SetGcpProjectId(v *string) *GcsStateFilesLocation {
+	if o.GcpProjectId = v; o.GcpProjectId == nil {
+		o.nullFields = append(o.nullFields, "GcpProjectId")
 	}
 	return o
 }

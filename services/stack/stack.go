@@ -33,22 +33,15 @@ type Stack struct {
 }
 
 type Data struct {
-	DeploymentBehavior       *DeploymentBehavior                    `json:"deploymentBehavior,omitempty"`
+	DeploymentBehavior       *cross_models.DeploymentBehavior       `json:"deploymentBehavior,omitempty"`
 	DeploymentApprovalPolicy *cross_models.DeploymentApprovalPolicy `json:"deploymentApprovalPolicy,omitempty"`
 	VcsInfo                  *VcsInfo                               `json:"vcsInfo,omitempty"`
-	RunTrigger               *RunTrigger                            `json:"runTrigger,omitempty"`
-	IacConfig                *IacConfig                             `json:"iacConfig,omitempty"`
+	RunTrigger               *cross_models.RunTrigger               `json:"runTrigger,omitempty"`
+	IacConfig                *cross_models.IacConfig                `json:"iacConfig,omitempty"`
 	Policy                   *Policy                                `json:"policy,omitempty"`
-	RunnerConfig             *RunnerConfig                          `json:"runnerConfig,omitempty"`
-	AutoSync                 *AutoSync                              `json:"autoSync,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type DeploymentBehavior struct {
-	DeployOnPush    *bool `json:"deployOnPush,omitempty"`
-	WaitForApproval *bool `json:"waitForApproval,omitempty"`
+	RunnerConfig             *cross_models.RunnerConfig             `json:"runnerConfig,omitempty"`
+	Capabilities             *Capabilities                          `json:"capabilities,omitempty"`
+	AutoSync                 *cross_models.AutoSync                 `json:"autoSync,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -59,25 +52,6 @@ type VcsInfo struct {
 	RepoName   *string `json:"repoName,omitempty"`
 	Path       *string `json:"path,omitempty"`
 	Branch     *string `json:"branch,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type RunTrigger struct {
-	Patterns        []*string `json:"patterns,omitempty"`
-	ExcludePatterns []*string `json:"excludePatterns,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type IacConfig struct {
-	TerraformVersion   *string   `json:"terraformVersion,omitempty"`
-	TerragruntVersion  *string   `json:"terragruntVersion,omitempty"`
-	OpentofuVersion    *string   `json:"opentofuVersion,omitempty"`
-	IsTerragruntRunAll *bool     `json:"isTerragruntRunAll,omitempty"`
-	VarFiles           []*string `json:"varFiles,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -115,16 +89,17 @@ type TtlOverride struct {
 	nullFields      []string
 }
 
-type RunnerConfig struct {
-	Mode   *string   `json:"mode,omitempty"` //commons.RunnerConfigModeTypes
-	Groups []*string `json:"groups,omitempty"`
+type Capabilities struct {
+	DeployOnPush   *CapabilityConfig `json:"deployOnPush,omitempty"`
+	PlanOnPr       *CapabilityConfig `json:"planOnPr,omitempty"`
+	DriftDetection *CapabilityConfig `json:"driftDetection,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type AutoSync struct {
-	DeployWhenDriftDetected *bool `json:"deployWhenDriftDetected,omitempty"`
+type CapabilityConfig struct {
+	Status *string `json:"status,omitempty"` // enabled/disabled
 
 	forceSendFields []string
 	nullFields      []string
@@ -357,7 +332,7 @@ func (o Data) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Data) SetDeploymentBehavior(v *DeploymentBehavior) *Data {
+func (o *Data) SetDeploymentBehavior(v *cross_models.DeploymentBehavior) *Data {
 	if o.DeploymentBehavior = v; o.DeploymentBehavior == nil {
 		o.nullFields = append(o.nullFields, "DeploymentBehavior")
 	}
@@ -378,14 +353,14 @@ func (o *Data) SetVcsInfo(v *VcsInfo) *Data {
 	return o
 }
 
-func (o *Data) SetRunTrigger(v *RunTrigger) *Data {
+func (o *Data) SetRunTrigger(v *cross_models.RunTrigger) *Data {
 	if o.RunTrigger = v; o.RunTrigger == nil {
 		o.nullFields = append(o.nullFields, "RunTrigger")
 	}
 	return o
 }
 
-func (o *Data) SetIacConfig(v *IacConfig) *Data {
+func (o *Data) SetIacConfig(v *cross_models.IacConfig) *Data {
 	if o.IacConfig = v; o.IacConfig == nil {
 		o.nullFields = append(o.nullFields, "IacConfig")
 	}
@@ -399,40 +374,23 @@ func (o *Data) SetPolicy(v *Policy) *Data {
 	return o
 }
 
-func (o *Data) SetRunnerConfig(v *RunnerConfig) *Data {
+func (o *Data) SetRunnerConfig(v *cross_models.RunnerConfig) *Data {
 	if o.RunnerConfig = v; o.RunnerConfig == nil {
 		o.nullFields = append(o.nullFields, "RunnerConfig")
 	}
 	return o
 }
 
-func (o *Data) SetAutoSync(v *AutoSync) *Data {
+func (o *Data) SetCapabilities(v *Capabilities) *Data {
+	if o.Capabilities = v; o.Capabilities == nil {
+		o.nullFields = append(o.nullFields, "Capabilities")
+	}
+	return o
+}
+
+func (o *Data) SetAutoSync(v *cross_models.AutoSync) *Data {
 	if o.AutoSync = v; o.AutoSync == nil {
 		o.nullFields = append(o.nullFields, "AutoSync")
-	}
-	return o
-}
-
-//endregion
-
-//region Deployment Behavior
-
-func (o DeploymentBehavior) MarshalJSON() ([]byte, error) {
-	type noMethod DeploymentBehavior
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *DeploymentBehavior) SetDeployOnPush(v *bool) *DeploymentBehavior {
-	if o.DeployOnPush = v; o.DeployOnPush == nil {
-		o.nullFields = append(o.nullFields, "DeployOnPush")
-	}
-	return o
-}
-
-func (o *DeploymentBehavior) SetWaitForApproval(v *bool) *DeploymentBehavior {
-	if o.WaitForApproval = v; o.WaitForApproval == nil {
-		o.nullFields = append(o.nullFields, "WaitForApproval")
 	}
 	return o
 }
@@ -471,76 +429,6 @@ func (o *VcsInfo) SetPath(v *string) *VcsInfo {
 func (o *VcsInfo) SetBranch(v *string) *VcsInfo {
 	if o.Branch = v; o.Branch == nil {
 		o.nullFields = append(o.nullFields, "Branch")
-	}
-	return o
-}
-
-//endregion
-
-//region Run Trigger
-
-func (o RunTrigger) MarshalJSON() ([]byte, error) {
-	type noMethod RunTrigger
-	raw := noMethod(o)
-
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *RunTrigger) SetPatterns(v []*string) *RunTrigger {
-	if o.Patterns = v; o.Patterns == nil {
-		o.nullFields = append(o.nullFields, "Patterns")
-	}
-	return o
-}
-
-func (o *RunTrigger) SetExcludePatterns(v []*string) *RunTrigger {
-	if o.ExcludePatterns = v; o.ExcludePatterns == nil {
-		o.nullFields = append(o.nullFields, "ExcludePatterns")
-	}
-	return o
-}
-
-//endregion
-
-//region Iac Config
-
-func (o IacConfig) MarshalJSON() ([]byte, error) {
-	type noMethod IacConfig
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *IacConfig) SetTerraformVersion(v *string) *IacConfig {
-	if o.TerraformVersion = v; o.TerraformVersion == nil {
-		o.nullFields = append(o.nullFields, "TerraformVersion")
-	}
-	return o
-}
-
-func (o *IacConfig) SetTerragruntVersion(v *string) *IacConfig {
-	if o.TerragruntVersion = v; o.TerragruntVersion == nil {
-		o.nullFields = append(o.nullFields, "TerragruntVersion")
-	}
-	return o
-}
-
-func (o *IacConfig) SetOpentofuVersion(v *string) *IacConfig {
-	if o.OpentofuVersion = v; o.OpentofuVersion == nil {
-		o.nullFields = append(o.nullFields, "OpentofuVersion")
-	}
-	return o
-}
-
-func (o *IacConfig) SetIsTerragruntRunAll(v *bool) *IacConfig {
-	if o.IsTerragruntRunAll = v; o.IsTerragruntRunAll == nil {
-		o.nullFields = append(o.nullFields, "IsTerragruntRunAll")
-	}
-	return o
-}
-
-func (o *IacConfig) SetVarFiles(v []*string) *IacConfig {
-	if o.VarFiles = v; o.VarFiles == nil {
-		o.nullFields = append(o.nullFields, "VarFiles")
 	}
 	return o
 }
@@ -624,44 +512,51 @@ func (o *TtlOverride) SetValue(v *int) *TtlOverride {
 
 //endregion
 
-//region Runner Config
+//region Stack Capability
 
-func (o RunnerConfig) MarshalJSON() ([]byte, error) {
-	type noMethod RunnerConfig
+func (o Capabilities) MarshalJSON() ([]byte, error) {
+	type noMethod Capabilities
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *RunnerConfig) SetMode(v *string) *RunnerConfig {
-	if o.Mode = v; o.Mode == nil {
-		o.nullFields = append(o.nullFields, "Mode")
+func (o *Capabilities) SetDeployOnPush(v *CapabilityConfig) *Capabilities {
+	if o.DeployOnPush = v; o.DeployOnPush == nil {
+		o.nullFields = append(o.nullFields, "DeployOnPush")
 	}
 	return o
 }
 
-func (o *RunnerConfig) SetGroups(v []*string) *RunnerConfig {
-	if o.Groups = v; o.Groups == nil {
-		o.nullFields = append(o.nullFields, "Groups")
+func (o *Capabilities) SetPlanOnPr(v *CapabilityConfig) *Capabilities {
+	if o.PlanOnPr = v; o.PlanOnPr == nil {
+		o.nullFields = append(o.nullFields, "PlanOnPr")
+	}
+	return o
+}
+
+func (o *Capabilities) SetDriftDetection(v *CapabilityConfig) *Capabilities {
+	if o.DriftDetection = v; o.DriftDetection == nil {
+		o.nullFields = append(o.nullFields, "DriftDetection")
+	}
+	return o
+}
+
+//region Capability Config
+
+func (o CapabilityConfig) MarshalJSON() ([]byte, error) {
+	type noMethod CapabilityConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *CapabilityConfig) SetStatus(v *string) *CapabilityConfig {
+	if o.Status = v; o.Status == nil {
+		o.nullFields = append(o.nullFields, "Status")
 	}
 	return o
 }
 
 //endregion
-
-//region Auto Sync
-
-func (o AutoSync) MarshalJSON() ([]byte, error) {
-	type noMethod AutoSync
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *AutoSync) SetDeployWhenDriftDetected(v *bool) *AutoSync {
-	if o.DeployWhenDriftDetected = v; o.DeployWhenDriftDetected == nil {
-		o.nullFields = append(o.nullFields, "DeployWhenDriftDetected")
-	}
-	return o
-}
 
 //endregion
 

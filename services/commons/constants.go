@@ -52,8 +52,10 @@ const (
 	NamespaceRoleViewer = "viewer"
 	NamespaceRoleAdmin  = "admin"
 
-	SlackProtocol = "slack"
-	TeamsProtocol = "teams"
+	SlackProtocol    = "slack"
+	SlackAppProtocol = "slackApp"
+	TeamsProtocol    = "teams"
+	EmailProtocol    = "email"
 
 	WeeklyReportType = "weeklyReport"
 
@@ -67,4 +69,7 @@ const (
 
 	Default = "default"
 	Manual  = "manual"
+
+	BlueprintVariableManagedByStack  = "stack"
+	BlueprintVariableManagedByInCode = "inCode"
 )
