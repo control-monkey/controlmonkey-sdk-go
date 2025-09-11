@@ -21,18 +21,19 @@ import (
 //region Structure
 
 type Variable struct {
-	ID              *string                   `json:"id,omitempty"`    // read-only
-	Scope           *string                   `json:"scope,omitempty"` //commons.VariableScopeTypes
-	ScopeId         *string                   `json:"scopeId,omitempty"`
-	Key             *string                   `json:"key,omitempty"`
-	Value           *string                   `json:"value,omitempty"`
-	DisplayName     *string                   `json:"displayName,omitempty"`
-	Type            *string                   `json:"type,omitempty"` //commons.VariableTypes
-	IsSensitive     *bool                     `json:"isSensitive,omitempty"`
-	IsOverridable   *bool                     `json:"isOverridable,omitempty"`
-	IsRequired      *bool                     `json:"isRequired,omitempty"`
-	Description     *string                   `json:"description,omitempty"`
-	ValueConditions []*cross_models.Condition `json:"valueConditions,omitempty"`
+	ID                 *string                   `json:"id,omitempty"`    // read-only
+	Scope              *string                   `json:"scope,omitempty"` //commons.VariableScopeTypes
+	ScopeId            *string                   `json:"scopeId,omitempty"`
+	Key                *string                   `json:"key,omitempty"`
+	Value              *string                   `json:"value,omitempty"`
+	DisplayName        *string                   `json:"displayName,omitempty"`
+	Type               *string                   `json:"type,omitempty"` //commons.VariableTypes
+	IsSensitive        *bool                     `json:"isSensitive,omitempty"`
+	IsOverridable      *bool                     `json:"isOverridable,omitempty"`
+	IsRequired         *bool                     `json:"isRequired,omitempty"`
+	Description        *string                   `json:"description,omitempty"`
+	ValueConditions    []*cross_models.Condition `json:"valueConditions,omitempty"`
+	BlueprintManagedBy *string                   `json:"blueprintManagedBy,omitempty"` //commons.BlueprintVariableManagedByTypes
 
 	// forceSendFields is a read of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -351,6 +352,13 @@ func (o *Variable) SetDescription(v *string) *Variable {
 func (o *Variable) SetValueConditions(v []*cross_models.Condition) *Variable {
 	if o.ValueConditions = v; o.ValueConditions == nil {
 		o.nullFields = append(o.nullFields, "ValueConditions")
+	}
+	return o
+}
+
+func (o *Variable) SetBlueprintManagedBy(v *string) *Variable {
+	if o.BlueprintManagedBy = v; o.BlueprintManagedBy == nil {
+		o.nullFields = append(o.nullFields, "BlueprintManagedBy")
 	}
 	return o
 }

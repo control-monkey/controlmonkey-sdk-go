@@ -19,4 +19,5 @@ var (
 	ReportTypes                       = []string{WeeklyReportType}
 	SeverityTypes                     = []string{SeverityLow, SeverityMedium, SeverityHigh, SeverityCritical}
 	DisasterRecoveryBackupModeTypes   = []string{Default, Manual}
+	BlueprintVariableManagedByTypes   = []string{BlueprintVariableManagedByStack, BlueprintVariableManagedByInCode}
 )

@@ -69,4 +69,7 @@ const (
 
 	Default = "default"
 	Manual  = "manual"
+
+	BlueprintVariableManagedByStack  = "stack"
+	BlueprintVariableManagedByInCode = "inCode"
 )
