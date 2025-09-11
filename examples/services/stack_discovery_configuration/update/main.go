@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
@@ -17,11 +16,7 @@ func main() {
 	sdc := stack_discovery_configuration.New(sess)
 	ctx := context.Background()
 
-	configID := os.Getenv("CONTROL_MONKEY_STACK_DISCOVERY_CONFIG_ID")
-	if configID == "" {
-		log.Fatalf("ControlMonkey: set CONTROL_MONKEY_STACK_DISCOVERY_CONFIG_ID to an existing configuration id")
-	}
-
+	configID := "sdc-123"
 	update := &stack_discovery_configuration.StackDiscoveryConfiguration{
 		Description: controlmonkey.String("Updated configuration for discovering Terraform stacks"),
 		StackConfig: &stack_discovery_configuration.StackConfig{

@@ -33,7 +33,7 @@ func main() {
 		Protocol: controlmonkey.String("slack"),
 		Url:      controlmonkey.String("https://slack.com/example"),
 		NotificationEndpointSlackAppConfig: &notification.NotificationEndpointSlackAppConfig{
-			NotificationSlackAppId: controlmonkey.String("nsa-REPLACE"),
+			NotificationSlackAppId: controlmonkey.String("nsa-123"),
 			ChannelId:              controlmonkey.String("C1234567890"),
 		},
 		EmailAddresses: []*string{

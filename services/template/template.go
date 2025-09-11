@@ -3,9 +3,10 @@ package template
 import (
 	"context"
 	"encoding/json"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
 	"io"
 	"net/http"
+
+	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"

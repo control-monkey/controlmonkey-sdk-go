@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/notification"
@@ -27,10 +26,7 @@ func main() {
 	ctx := context.Background()
 
 	// Delete notification endpoint.
-	notificationEndpointId := os.Getenv("CONTROL_MONKEY_NOTIFICATION_ENDPOINT_ID")
-	if notificationEndpointId == "" {
-		log.Fatalf("CONTROL_MONKEY_NOTIFICATION_ENDPOINT_ID is not set")
-	}
+	notificationEndpointId := "ne-123"
 	_, err := svc.DeleteNotificationEndpoint(ctx, notificationEndpointId)
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to delete notification endpoint: %v", err)

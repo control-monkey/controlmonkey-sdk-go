@@ -76,7 +76,7 @@ type Capabilities struct {
 }
 
 type CapabilityConfig struct {
-	Status        *string `json:"status,omitempty"` // enabled, disabled
+	Status        *string `json:"status,omitempty"` // enabled/disabled
 	IsOverridable *bool   `json:"isOverridable,omitempty"`
 
 	forceSendFields []string

@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
@@ -89,13 +88,6 @@ func main() {
 	}
 
 	depID := controlmonkey.StringValue(created.ID)
-	if depID == "" {
-		depID = os.Getenv("CONTROL_MONKEY_DEPENDENCY_ID")
-		if depID == "" {
-			log.Fatalf("ControlMonkey: dependency id is empty; set CONTROL_MONKEY_DEPENDENCY_ID to an existing dependency id")
-		}
-	}
-
 	out, err := stackSvc.UpdateDependency(ctx, depID, update)
 	if err != nil {
 		log.Fatalf("ControlMonkey: failed to update dependency %q: %v", depID, err)

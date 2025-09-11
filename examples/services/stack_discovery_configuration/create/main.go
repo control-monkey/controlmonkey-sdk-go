@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/cross_models"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/namespace"
 	"github.com/control-monkey/controlmonkey-sdk-go/services/stack_discovery_configuration"
-	"log"
 )
 
 func main() {

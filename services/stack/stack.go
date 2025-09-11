@@ -99,7 +99,7 @@ type Capabilities struct {
 }
 
 type CapabilityConfig struct {
-	Status *string `json:"status,omitempty"` // enabled, disabled
+	Status *string `json:"status,omitempty"` // enabled/disabled
 
 	forceSendFields []string
 	nullFields      []string
