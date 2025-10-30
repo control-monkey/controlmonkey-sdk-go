@@ -25,6 +25,7 @@ type Blueprint struct {
 	BlueprintVcsInfo                 *VcsInfo               `json:"vcsInfo,omitempty"`
 	StackConfiguration               *StackConfiguration    `json:"stackConfiguration,omitempty"`
 	SubstituteParameters             []*SubstituteParameter `json:"substituteParameters,omitempty"`
+	Policy                           *Policy                `json:"policy,omitempty"`
 	SkipPlanOnStackInitialization    *bool                  `json:"skipPlanOnStackInitialization,omitempty"`
 	AutoApproveApplyOnInitialization *bool                  `json:"autoApproveApplyOnInitialization,omitempty"`
 
@@ -69,6 +70,30 @@ type SubstituteParameter struct {
 	Key             *string                   `json:"key,omitempty"`
 	Description     *string                   `json:"description,omitempty"`
 	ValueConditions []*cross_models.Condition `json:"valueConditions,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Policy struct {
+	TtlConfig *TtlConfig `json:"ttlConfig,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type TtlConfig struct {
+	MaxTtl                        *TtlDefinition `json:"maxTtl,omitempty"`
+	DefaultTtl                    *TtlDefinition `json:"defaultTtl,omitempty"`
+	OpenCleanupPrOnTtlTermination *bool          `json:"openCleanupPrOnTtlTermination,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type TtlDefinition struct {
+	Type  *string `json:"type,omitempty"` //commons.TtlTypes
+	Value *int    `json:"value,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -456,6 +481,76 @@ func (o *SubstituteParameter) SetDescription(v *string) *SubstituteParameter {
 func (o *SubstituteParameter) SetValueConditions(v []*cross_models.Condition) *SubstituteParameter {
 	if o.ValueConditions = v; o.ValueConditions == nil {
 		o.nullFields = append(o.nullFields, "ValueConditions")
+	}
+	return o
+}
+
+//endregion
+
+// region Policy
+func (o *Blueprint) SetPolicy(v *Policy) *Blueprint {
+	if o.Policy = v; o.Policy == nil {
+		o.nullFields = append(o.nullFields, "Policy")
+	}
+	return o
+}
+
+func (o Policy) MarshalJSON() ([]byte, error) {
+	type noMethod Policy
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Policy) SetTtlConfig(v *TtlConfig) *Policy {
+	if o.TtlConfig = v; o.TtlConfig == nil {
+		o.nullFields = append(o.nullFields, "TtlConfig")
+	}
+	return o
+}
+
+func (o TtlConfig) MarshalJSON() ([]byte, error) {
+	type noMethod TtlConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TtlConfig) SetMaxTtl(v *TtlDefinition) *TtlConfig {
+	if o.MaxTtl = v; o.MaxTtl == nil {
+		o.nullFields = append(o.nullFields, "MaxTtl")
+	}
+	return o
+}
+
+func (o *TtlConfig) SetDefaultTtl(v *TtlDefinition) *TtlConfig {
+	if o.DefaultTtl = v; o.DefaultTtl == nil {
+		o.nullFields = append(o.nullFields, "DefaultTtl")
+	}
+	return o
+}
+
+func (o *TtlConfig) SetOpenCleanupPrOnTtlTermination(v *bool) *TtlConfig {
+	if o.OpenCleanupPrOnTtlTermination = v; o.OpenCleanupPrOnTtlTermination == nil {
+		o.nullFields = append(o.nullFields, "OpenCleanupPrOnTtlTermination")
+	}
+	return o
+}
+
+func (o TtlDefinition) MarshalJSON() ([]byte, error) {
+	type noMethod TtlDefinition
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TtlDefinition) SetType(v *string) *TtlDefinition {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *TtlDefinition) SetValue(v *int) *TtlDefinition {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
 	}
 	return o
 }
