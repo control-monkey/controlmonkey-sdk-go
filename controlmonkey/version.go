@@ -1,7 +1,7 @@
 package controlmonkey
 
 // SDKVersion is the current version of the SDK.
-const SDKVersion = "1.16.0"
+const SDKVersion = "1.17.0"
 
 // SDKName is the name of the SDK.
 const SDKName = "controlmonkey-sdk-go"

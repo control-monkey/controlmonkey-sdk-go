@@ -1,4 +1,4 @@
-package namespace_permissions
+package external_credential
 
 import (
 	"context"
@@ -6,16 +6,13 @@ import (
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/client"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/commons"
 )
 
 // Service provides the API operation methods for making requests to endpoints
 // of the ControlMonkey API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	ListNamespacePermissions(context.Context, *string, *string) ([]*NamespacePermission, error)
-	CreateNamespacePermission(context.Context, *NamespacePermission) (*commons.EmptyResponse, error)
-	DeleteNamespacePermission(context.Context, *NamespacePermission) (*commons.EmptyResponse, error)
+	ListExternalCredentials(context.Context, string, string) ([]*ExternalCredential, error)
 }
 
 type ServiceOp struct {
