@@ -29,7 +29,7 @@ func main() {
 	// List external_credential.
 	credential_vendor := "aws"
 	credential_name := "awsProdCreds"
-	out, err := svc.ListExternalCredentials(ctx, credential_vendor, credential_name)
+	out, err := svc.ListExternalCredentials(ctx, credential_vendor, nil, &credential_name)
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to read external_credentials: %v", err)
 	}

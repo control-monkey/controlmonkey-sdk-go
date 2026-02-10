@@ -26,11 +26,17 @@ type ExternalCredential struct {
 
 //region Methods
 
-func (s *ServiceOp) ListExternalCredentials(ctx context.Context, credentialsVendor string, credentialName string) ([]*ExternalCredential, error) {
+func (s *ServiceOp) ListExternalCredentials(ctx context.Context, credentialsVendor string, credentialId *string, credentialName *string) ([]*ExternalCredential, error) {
 	r := client.NewRequest(http.MethodGet, "/org/externalCredentials")
 
 	r.Params.Set("credentialsVendor", credentialsVendor)
-	r.Params.Set("credentialName", credentialName)
+
+	if credentialId != nil {
+		r.Params.Set("credentialId", *credentialId)
+	}
+	if credentialName != nil {
+		r.Params.Set("credentialName", *credentialName)
+	}
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {

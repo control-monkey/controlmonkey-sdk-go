@@ -12,7 +12,7 @@ import (
 // of the ControlMonkey API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	ListExternalCredentials(context.Context, string, string) ([]*ExternalCredential, error)
+	ListExternalCredentials(context.Context, string, *string, *string) ([]*ExternalCredential, error)
 }
 
 type ServiceOp struct {
