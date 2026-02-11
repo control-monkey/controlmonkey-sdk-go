@@ -6,7 +6,7 @@ import (
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/namespace_permissions"
+	"github.com/control-monkey/controlmonkey-sdk-go/services/external_credentials"
 )
 
 func main() {
@@ -21,21 +21,22 @@ func main() {
 	// Optional controlmonkey.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// services specific configuration.
-	svc := namespace_permissions.New(sess)
+	svc := external_credentials.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
-	// Read namespace_permissions.
-	namespaceId := "ns-7x4pqdfdt1"
-	t, err := svc.ListNamespacePermissions(ctx, &namespaceId, nil)
+	// List external_credentials.
+	credentials_vendor := "aws"
+	credentials_name := "awsProdCreds"
+	out, err := svc.ListExternalCredentials(ctx, credentials_vendor, nil, &credentials_name)
 	if err != nil {
-		log.Fatalf("Control Monkey: failed to read namespace permissions: %v", err)
+		log.Fatalf("Control Monkey: failed to read external_credentials: %v", err)
 	}
 
-	// Output namespace, if exists.
-	if t != nil {
-		log.Printf("Team Users: %s",
-			stringutil.Stringify(t))
+	// Output external_credentials, if exists.
+	if out != nil {
+		log.Printf("External Credentials: %s",
+			stringutil.Stringify(out))
 	}
 }

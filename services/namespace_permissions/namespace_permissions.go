@@ -17,6 +17,7 @@ import (
 
 type NamespacePermission struct {
 	NamespaceId          *string `json:"namespaceId,omitempty"`
+	StackId              *string `json:"stackId,omitempty"`
 	UserEmail            *string `json:"userEmail,omitempty"`
 	ProgrammaticUserName *string `json:"programmaticUserName,omitempty"`
 	TeamId               *string `json:"teamId,omitempty"`
@@ -58,9 +59,15 @@ func (s *ServiceOp) CreateNamespacePermission(ctx context.Context, input *Namesp
 	return output, nil
 }
 
-func (s *ServiceOp) ListNamespacePermissions(ctx context.Context, namespaceId string) ([]*NamespacePermission, error) {
+func (s *ServiceOp) ListNamespacePermissions(ctx context.Context, namespaceId *string, stackId *string) ([]*NamespacePermission, error) {
 	r := client.NewRequest(http.MethodGet, "/iam/org/namespacePermission")
-	r.Params.Set("namespaceId", namespaceId)
+
+	if namespaceId != nil {
+		r.Params.Set("namespaceId", *namespaceId)
+	}
+	if stackId != nil {
+		r.Params.Set("stackId", *stackId)
+	}
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -143,6 +150,13 @@ func (o NamespacePermission) MarshalJSON() ([]byte, error) {
 func (o *NamespacePermission) SetNamespaceId(v *string) *NamespacePermission {
 	if o.NamespaceId = v; o.NamespaceId == nil {
 		o.nullFields = append(o.nullFields, "NamespaceId")
+	}
+	return o
+}
+
+func (o *NamespacePermission) SetStackId(v *string) *NamespacePermission {
+	if o.StackId = v; o.StackId == nil {
+		o.nullFields = append(o.nullFields, "StackId")
 	}
 	return o
 }
