@@ -1,4 +1,4 @@
-package external_credential
+package external_credentials
 
 import (
 	"context"
@@ -10,11 +10,11 @@ import (
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/jsonutil"
 )
 
-//region ExternalCredential
+//region ExternalCredentials
 
 //region Structure
 
-type ExternalCredential struct {
+type ExternalCredentials struct {
 	ID   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
 
@@ -26,16 +26,16 @@ type ExternalCredential struct {
 
 //region Methods
 
-func (s *ServiceOp) ListExternalCredentials(ctx context.Context, credentialsVendor string, credentialId *string, credentialName *string) ([]*ExternalCredential, error) {
+func (s *ServiceOp) ListExternalCredentials(ctx context.Context, credentialsVendor string, credentialsId *string, credentialsName *string) ([]*ExternalCredentials, error) {
 	r := client.NewRequest(http.MethodGet, "/org/externalCredentials")
 
 	r.Params.Set("credentialsVendor", credentialsVendor)
 
-	if credentialId != nil {
-		r.Params.Set("credentialId", *credentialId)
+	if credentialsId != nil {
+		r.Params.Set("credentialsId", *credentialsId)
 	}
-	if credentialName != nil {
-		r.Params.Set("credentialName", *credentialName)
+	if credentialsName != nil {
+		r.Params.Set("credentialsName", *credentialsName)
 	}
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -56,25 +56,25 @@ func (s *ServiceOp) ListExternalCredentials(ctx context.Context, credentialsVend
 
 //region Private Methods
 
-func externalCredentialFromJSON(in []byte) (*ExternalCredential, error) {
-	b := new(ExternalCredential)
+func externalCredentialsFromJSON(in []byte) (*ExternalCredentials, error) {
+	b := new(ExternalCredentials)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
 
-func externalCredentialsFromJSON(in []byte) ([]*ExternalCredential, error) {
+func externalCredentialsListFromJSON(in []byte) ([]*ExternalCredentials, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*ExternalCredential, len(rw.Response.Items))
+	out := make([]*ExternalCredentials, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
 	for i, rb := range rw.Response.Items {
-		b, err := externalCredentialFromJSON(rb)
+		b, err := externalCredentialsFromJSON(rb)
 		if err != nil {
 			return nil, err
 		}
@@ -84,32 +84,32 @@ func externalCredentialsFromJSON(in []byte) ([]*ExternalCredential, error) {
 	return out, nil
 }
 
-func externalCredentialsFromHttpResponse(resp *http.Response) ([]*ExternalCredential, error) {
+func externalCredentialsFromHttpResponse(resp *http.Response) ([]*ExternalCredentials, error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	return externalCredentialsFromJSON(body)
+	return externalCredentialsListFromJSON(body)
 }
 
 //endregion
 
 //region Setters
 
-func (o ExternalCredential) MarshalJSON() ([]byte, error) {
-	type noMethod ExternalCredential
+func (o ExternalCredentials) MarshalJSON() ([]byte, error) {
+	type noMethod ExternalCredentials
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ExternalCredential) SetID(v *string) *ExternalCredential {
+func (o *ExternalCredentials) SetID(v *string) *ExternalCredentials {
 	if o.ID = v; o.ID == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
 
-func (o *ExternalCredential) SetName(v *string) *ExternalCredential {
+func (o *ExternalCredentials) SetName(v *string) *ExternalCredentials {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
 	}

@@ -6,7 +6,7 @@ import (
 
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/session"
 	"github.com/control-monkey/controlmonkey-sdk-go/controlmonkey/util/stringutil"
-	"github.com/control-monkey/controlmonkey-sdk-go/services/external_credential"
+	"github.com/control-monkey/controlmonkey-sdk-go/services/external_credentials"
 )
 
 func main() {
@@ -21,15 +21,15 @@ func main() {
 	// Optional controlmonkey.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// services specific configuration.
-	svc := external_credential.New(sess)
+	svc := external_credentials.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
-	// List external_credential.
-	credential_vendor := "aws"
-	credential_name := "awsProdCreds"
-	out, err := svc.ListExternalCredentials(ctx, credential_vendor, nil, &credential_name)
+	// List external_credentials.
+	credentials_vendor := "aws"
+	credentials_name := "awsProdCreds"
+	out, err := svc.ListExternalCredentials(ctx, credentials_vendor, nil, &credentials_name)
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to read external_credentials: %v", err)
 	}
