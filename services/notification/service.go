@@ -26,7 +26,7 @@ type Service interface {
 	UpdateNotificationEndpoint(context.Context, string, *Endpoint) (*Endpoint, error)
 	DeleteNotificationEndpoint(context.Context, string) (*commons.EmptyResponse, error)
 
-	ListEventSubscriptions(context.Context, string, *string) ([]*EventSubscription, error)
+	ListEventSubscriptions(context.Context, *ListEventSubscriptionsInput) ([]*EventSubscription, error)
 	CreateEventSubscription(context.Context, *EventSubscription) (*EventSubscription, error)
 	DeleteEventSubscription(context.Context, string) (*commons.EmptyResponse, error)
 

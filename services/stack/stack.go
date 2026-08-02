@@ -42,7 +42,6 @@ type Data struct {
 	RunnerConfig             *cross_models.RunnerConfig             `json:"runnerConfig,omitempty"`
 	Capabilities             *Capabilities                          `json:"capabilities,omitempty"`
 	AutoSync                 *cross_models.AutoSync                 `json:"autoSync,omitempty"`
-	RunTaskConfig            *RunTaskConfig                         `json:"runTaskConfig,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -101,22 +100,6 @@ type Capabilities struct {
 
 type CapabilityConfig struct {
 	Status *string `json:"status,omitempty"` // enabled/disabled
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type RunTaskConfig struct {
-	RunTasks []*RunTaskProperties `json:"runTasks,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type RunTaskProperties struct {
-	RunTaskId        *string `json:"runTaskId,omitempty"`
-	EnforcementLevel *string `json:"enforcementLevel,omitempty"`
-	Stage            *string `json:"stage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -412,13 +395,6 @@ func (o *Data) SetAutoSync(v *cross_models.AutoSync) *Data {
 	return o
 }
 
-func (o *Data) SetRunTaskConfig(v *RunTaskConfig) *Data {
-	if o.RunTaskConfig = v; o.RunTaskConfig == nil {
-		o.nullFields = append(o.nullFields, "RunTaskConfig")
-	}
-	return o
-}
-
 //endregion
 
 //region VCS Info
@@ -576,54 +552,6 @@ func (o CapabilityConfig) MarshalJSON() ([]byte, error) {
 func (o *CapabilityConfig) SetStatus(v *string) *CapabilityConfig {
 	if o.Status = v; o.Status == nil {
 		o.nullFields = append(o.nullFields, "Status")
-	}
-	return o
-}
-
-//endregion
-
-//endregion
-
-//region RunTaskConfig
-
-func (o RunTaskConfig) MarshalJSON() ([]byte, error) {
-	type noMethod RunTaskConfig
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *RunTaskConfig) SetRunTasks(v []*RunTaskProperties) *RunTaskConfig {
-	if o.RunTasks = v; o.RunTasks == nil {
-		o.nullFields = append(o.nullFields, "RunTasks")
-	}
-	return o
-}
-
-//region RunTaskProperties
-
-func (o RunTaskProperties) MarshalJSON() ([]byte, error) {
-	type noMethod RunTaskProperties
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *RunTaskProperties) SetRunTaskId(v *string) *RunTaskProperties {
-	if o.RunTaskId = v; o.RunTaskId == nil {
-		o.nullFields = append(o.nullFields, "RunTaskId")
-	}
-	return o
-}
-
-func (o *RunTaskProperties) SetEnforcementLevel(v *string) *RunTaskProperties {
-	if o.EnforcementLevel = v; o.EnforcementLevel == nil {
-		o.nullFields = append(o.nullFields, "EnforcementLevel")
-	}
-	return o
-}
-
-func (o *RunTaskProperties) SetStage(v *string) *RunTaskProperties {
-	if o.Stage = v; o.Stage == nil {
-		o.nullFields = append(o.nullFields, "Stage")
 	}
 	return o
 }

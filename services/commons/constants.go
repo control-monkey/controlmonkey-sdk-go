@@ -1,11 +1,14 @@
 package commons
 
 const (
-	OrganizationScope = "organization"
-	NamespaceScope    = "namespace"
-	TemplateScope     = "template"
-	BlueprintScope    = "blueprint"
-	StackScope        = "stack"
+	OrganizationScope      = "organization"
+	NamespaceScope         = "namespace"
+	TemplateScope          = "template"
+	BlueprintScope         = "blueprint"
+	StackScope             = "stack"
+	AwsAccountScope        = "awsAccount"
+	AzureSubscriptionScope = "azureSubscription"
+	GcpProjectScope        = "gcpProject"
 
 	TfTVar = "tfVar"
 	EnvVar = "envVar"
@@ -44,6 +47,10 @@ const (
 	StackTargetType     = "stack"
 	NamespaceTargetType = "namespace"
 
+	AllTargetsIdentifier = "ALL"
+
+	PostPlanStage = "postPlan"
+
 	Warning       = "warning"
 	SoftMandatory = "softMandatory"
 	HardMandatory = "hardMandatory"
@@ -66,6 +73,12 @@ const (
 
 	RoleViewer = "viewer"
 	RoleAdmin  = "admin"
+
+	NamespaceRoleType    = "namespaceRole"
+	OrganizationRoleType = "organizationRole"
+
+	RestrictReadToOwnStacks  = "restrictReadToOwnStacks"
+	RestrictWriteToOwnStacks = "restrictWriteToOwnStacks"
 
 	Default = "default"
 	Manual  = "manual"

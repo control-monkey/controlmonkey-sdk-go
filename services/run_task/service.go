@@ -18,6 +18,11 @@ type Service interface {
 	ReadRunTask(context.Context, string) (*RunTask, error)
 	UpdateRunTask(context.Context, string, *RunTask) (*RunTask, error)
 	DeleteRunTask(context.Context, string) (*commons.EmptyResponse, error)
+
+	CreateRunTaskMapping(context.Context, *RunTaskMapping) (*RunTaskMapping, error)
+	ListRunTaskMappings(context.Context, string) ([]*RunTaskMapping, error)
+	UpdateRunTaskMapping(context.Context, *RunTaskMapping) (*RunTaskMapping, error)
+	DeleteRunTaskMapping(context.Context, *RunTaskMapping) (*commons.EmptyResponse, error)
 }
 
 type ServiceOp struct {

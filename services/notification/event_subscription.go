@@ -40,6 +40,17 @@ type EventSubscription struct {
 	nullFields []string
 }
 
+// ListEventSubscriptionsInput holds the query parameters of GET /notification/subscription.
+type ListEventSubscriptionsInput struct {
+	NamespaceId         *string // commons.AllTargetsIdentifier for all namespaces
+	StackId             *string
+	AwsAccountId        *string
+	AzureSubscriptionId *string
+	GcpProjectId        *string
+	OrgOnly             bool
+	ExcludeInherited    bool // when true the response excludes subscriptions inherited from a wider scope
+}
+
 //endregion
 
 //region Methods
@@ -67,13 +78,30 @@ func (s *ServiceOp) CreateEventSubscription(ctx context.Context, input *EventSub
 	return output, nil
 }
 
-func (s *ServiceOp) ListEventSubscriptions(ctx context.Context, scope string, scopeId *string) ([]*EventSubscription, error) {
+func (s *ServiceOp) ListEventSubscriptions(ctx context.Context, input *ListEventSubscriptionsInput) ([]*EventSubscription, error) {
 	r := client.NewRequest(http.MethodGet, baseUrl+subscriptionUrl)
-	if scope == commons.OrganizationScope {
-		r.Params.Set("orgOnly", "true")
-	} else if scopeId != nil {
-		if scope == commons.NamespaceScope {
-			r.Params.Set("namespaceId", *scopeId)
+
+	if input != nil {
+		if input.NamespaceId != nil {
+			r.Params.Set("namespaceId", *input.NamespaceId)
+		}
+		if input.StackId != nil {
+			r.Params.Set("stackId", *input.StackId)
+		}
+		if input.AwsAccountId != nil {
+			r.Params.Set("awsAccountId", *input.AwsAccountId)
+		}
+		if input.AzureSubscriptionId != nil {
+			r.Params.Set("azureSubscriptionId", *input.AzureSubscriptionId)
+		}
+		if input.GcpProjectId != nil {
+			r.Params.Set("gcpProjectId", *input.GcpProjectId)
+		}
+		if input.OrgOnly {
+			r.Params.Set("orgOnly", "true")
+		}
+		if input.ExcludeInherited {
+			r.Params.Set("excludeInherited", "true")
 		}
 	}
 

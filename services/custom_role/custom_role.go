@@ -24,6 +24,7 @@ const (
 
 type CustomRole struct {
 	ID               *string       `json:"id,omitempty"` // read-only
+	Type             *string       `json:"type,omitempty"`
 	Name             *string       `json:"name,omitempty"`
 	Description      *string       `json:"description,omitempty"`
 	Permissions      []*Permission `json:"permissions,omitempty"`
@@ -34,7 +35,18 @@ type CustomRole struct {
 }
 
 type Permission struct {
-	Name *string `json:"name,omitempty"`
+	Name         *string                  `json:"name,omitempty"`
+	Names        []*string                `json:"names,omitempty"`
+	Restrictions []*PermissionRestriction `json:"restrictions,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type PermissionRestriction struct {
+	CloudProvider  *string `json:"cloudProvider,omitempty"`
+	CloudAccountId *string `json:"cloudAccountId,omitempty"`
+	CmResourceName *string `json:"cmResourceName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -220,6 +232,13 @@ func (o *CustomRole) SetID(v *string) *CustomRole {
 	return o
 }
 
+func (o *CustomRole) SetType(v *string) *CustomRole {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
 func (o *CustomRole) SetName(v *string) *CustomRole {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
@@ -262,6 +281,51 @@ func (o *Permission) SetName(v *string) *Permission {
 	}
 	return o
 }
+
+func (o *Permission) SetNames(v []*string) *Permission {
+	if o.Names = v; o.Names == nil {
+		o.nullFields = append(o.nullFields, "Names")
+	}
+	return o
+}
+
+func (o *Permission) SetRestrictions(v []*PermissionRestriction) *Permission {
+	if o.Restrictions = v; o.Restrictions == nil {
+		o.nullFields = append(o.nullFields, "Restrictions")
+	}
+	return o
+}
+
+//region PermissionRestriction
+
+func (o PermissionRestriction) MarshalJSON() ([]byte, error) {
+	type noMethod PermissionRestriction
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *PermissionRestriction) SetCloudProvider(v *string) *PermissionRestriction {
+	if o.CloudProvider = v; o.CloudProvider == nil {
+		o.nullFields = append(o.nullFields, "CloudProvider")
+	}
+	return o
+}
+
+func (o *PermissionRestriction) SetCloudAccountId(v *string) *PermissionRestriction {
+	if o.CloudAccountId = v; o.CloudAccountId == nil {
+		o.nullFields = append(o.nullFields, "CloudAccountId")
+	}
+	return o
+}
+
+func (o *PermissionRestriction) SetCmResourceName(v *string) *PermissionRestriction {
+	if o.CmResourceName = v; o.CmResourceName == nil {
+		o.nullFields = append(o.nullFields, "CmResourceName")
+	}
+	return o
+}
+
+//endregion
 
 //endregion
 
