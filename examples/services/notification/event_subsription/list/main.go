@@ -28,7 +28,7 @@ func main() {
 
 	// Read event subscriptions.
 	//scopeId := ""
-	t, err := svc.ListEventSubscriptions(ctx, "organization", nil)
+	t, err := svc.ListEventSubscriptions(ctx, &notification.ListEventSubscriptionsInput{OrgOnly: true, ExcludeInherited: true})
 	if err != nil {
 		log.Fatalf("Control Monkey: failed to read event subscriptions: %v", err)
 	}

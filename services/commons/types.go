@@ -14,7 +14,10 @@ var (
 	EnforcementLevelTypes             = []string{Warning, SoftMandatory, HardMandatory}
 	GroupEnforcementLevelTypes        = []string{Warning, SoftMandatory, HardMandatory, BySeverity}
 	NamespaceRoleTypes                = []string{NamespaceRoleViewer, NamespaceRoleAdmin}
-	EventSubscriptionScopeTypes       = []string{OrganizationScope, NamespaceScope}
+	RunTaskStageTypes                 = []string{PostPlanStage}
+	EventSubscriptionScopeTypes       = []string{OrganizationScope, NamespaceScope, AwsAccountScope, AzureSubscriptionScope, GcpProjectScope, StackScope}
+	CustomRoleTypeTypes               = []string{NamespaceRoleType, OrganizationRoleType}
+	StackRestrictionTypes             = []string{RestrictReadToOwnStacks, RestrictWriteToOwnStacks}
 	EventSubscriptionProtocolTypes    = []string{SlackProtocol, SlackAppProtocol, TeamsProtocol, EmailProtocol}
 	ReportTypes                       = []string{WeeklyReportType}
 	SeverityTypes                     = []string{SeverityLow, SeverityMedium, SeverityHigh, SeverityCritical}
